@@ -1,0 +1,18 @@
+# Nix 构建结果
+result
+result-*
+
+# Home Manager 备份
+*.backup
+
+# 包含敏感信息的配置文件（GitHub token 等）
+nix.conf
+
+# 编辑器临时文件
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Nix 临时文件
+.direnv/

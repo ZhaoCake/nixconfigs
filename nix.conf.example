@@ -1,0 +1,38 @@
+# Nix 配置文件模板
+# 将此文件复制为 nix.conf 并填入您的 GitHub token
+# 命令: cp nix.conf.example nix.conf
+# 然后软链接到: ~/.config/nix/nix.conf
+# 命令: mkdir -p ~/.config/nix && ln -sf ~/.nixconfigs/nix.conf ~/.config/nix/nix.conf
+
+# 启用 Flakes 和新的 nix 命令
+experimental-features = nix-command flakes
+
+# 注意: trusted-users 需要配置在 /etc/nix/nix.conf（系统级别）
+# sudo 执行: echo "trusted-users = root YOUR_USERNAME" | sudo tee -a /etc/nix/nix.conf
+# 然后重启服务: sudo systemctl restart nix-daemon.service
+
+# 构建设置
+max-jobs = auto
+cores = 0
+
+# 缓存和替代源（包含中国镜像，按优先级排序）
+substituters = https://mirrors.ustc.edu.cn/nix-channels/store https://mirror.sjtu.edu.cn/nix-channels/store https://cache.nixos.org https://nix-community.cachix.org
+trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
+
+# 保持构建日志
+keep-outputs = true
+keep-derivations = true
+
+# 自动优化存储
+auto-optimise-store = true
+
+# 警告设置
+warn-dirty = false
+
+# GitHub 访问令牌（用于避免速率限制）
+# 1. 访问 https://github.com/settings/tokens
+# 2. 点击 "Generate new token" -> "Generate new token (classic)"
+# 3. 勾选 "repo" 权限（或者只勾选 "public_repo" 如果只访问公共仓库）
+# 4. 生成 token 并复制
+# 5. 取消下面这行的注释并填入您的 token
+# access-tokens = github.com=ghp_YOUR_TOKEN_HERE
