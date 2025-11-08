@@ -34,6 +34,7 @@
     htop
     btop
     fastfetch  # 系统信息显示工具
+    openssh    # SSH 客户端
     
     # 开发工具
     ripgrep
@@ -63,6 +64,46 @@
     settings = {
       user.name = "cake";
       user.email = "zhaocake@foxmail.com";  # 请修改为您的邮箱
+    };
+  };
+
+  # SSH 配置
+  programs.ssh = {
+    enable = true;
+    enableDefaultConfig = false;  # 禁用默认配置，手动指定
+    
+    # SSH 配置
+    matchBlocks = {
+      # 全局默认配置（相当于 Host *）
+      "*" = {
+        # 保持连接活跃
+        serverAliveInterval = 60;
+        serverAliveCountMax = 3;
+        
+        # 启用连接复用
+        controlMaster = "auto";
+        controlPath = "~/.ssh/control-%r@%h:%p";
+        controlPersist = "10m";
+        
+        # 其他常用默认配置
+        forwardAgent = false;
+        compression = true;
+      };
+      
+      # GitHub 配置
+      "github.com" = {
+        hostname = "github.com";
+        user = "git";
+        identityFile = "~/.ssh/id_ed25519";
+      };
+      
+      # 示例：服务器配置
+      # "myserver" = {
+      #   hostname = "192.168.1.100";
+      #   user = "cake";
+      #   port = 22;
+      #   identityFile = "~/.ssh/id_rsa";
+      # };
     };
   };
 }
