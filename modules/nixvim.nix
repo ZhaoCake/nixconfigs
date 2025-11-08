@@ -87,9 +87,44 @@
       # LSP 配置
       lsp = {
         enable = true;
+        
+        # LSP 按键映射
+        keymaps = {
+          diagnostic = {
+            "<leader>k" = "goto_prev";
+            "<leader>j" = "goto_next";
+          };
+          lspBuf = {
+            "gd" = "definition";
+            "gD" = "declaration";
+            "gi" = "implementation";
+            "gr" = "references";
+            "K" = "hover";
+            "<leader>ca" = "code_action";
+            "<leader>rn" = "rename";
+            "<leader>f" = "format";
+          };
+        };
+        
         servers = {
           # Nix
-          nixd.enable = true;
+          nixd = {
+            enable = true;
+            settings = {
+              formatting.command = [ "nixpkgs-fmt" ];
+            };
+          };
+          
+          # Rust
+          rust_analyzer = {
+            enable = true;
+            installCargo = false;  # 使用系统的 cargo
+            installRustc = false;  # 使用系统的 rustc
+            settings = {
+              cargo.allFeatures = true;
+              checkOnSave.command = "clippy";
+            };
+          };
           
           # Python
           pyright.enable = true;
@@ -97,10 +132,28 @@
           # Lua
           lua_ls.enable = true;
           
+          # C/C++
+          clangd = {
+            enable = true;
+            # clangd 命令行参数
+            cmd = [
+              "clangd"
+              "--background-index"
+              "--clang-tidy"
+              "--header-insertion=iwyu"
+              "--completion-style=detailed"
+              "--function-arg-placeholders"
+            ];
+          };
+          
           # 可以根据需要添加更多 LSP
-          # tsserver.enable = true;  # TypeScript/JavaScript
-          # rust-analyzer.enable = true;  # Rust
+          # ts_ls.enable = true;  # TypeScript/JavaScript (tsserver 已更名)
         };
+      };
+      
+      # LSP 签名帮助
+      lsp-signature = {
+        enable = true;
       };
       
       # 自动补全
@@ -127,6 +180,11 @@
             '';
           };
         };
+      };
+      
+      # LSP 进度显示
+      fidget = {
+        enable = true;
       };
       
       # Git 集成
