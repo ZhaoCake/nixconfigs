@@ -1,0 +1,38 @@
+name: Format Check
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  check-formatting:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Install Nix
+      uses: cachix/install-nix-action@v24
+      with:
+        nix_path: nixpkgs=channel:nixos-unstable
+        extra_nix_config: |
+          experimental-features = nix-command flakes
+    
+    - name: Check Nix file formatting
+      run: |
+        echo "Checking Nix files with nixpkgs-fmt..."
+        nix-shell -p nixpkgs-fmt --run "
+          # 检查格式但不修改
+          find . -name '*.nix' -not -path '*/.*' | while read file; do
+            echo \"Checking \$file...\"
+            nixpkgs-fmt --check \"\$file\" || {
+              echo \"❌ \$file needs formatting\"
+              echo \"Run: nixpkgs-fmt \$file\"
+              exit 1
+            }
+          done
+          echo '✅ All Nix files are properly formatted'
+        "
