@@ -96,18 +96,18 @@
               # sqlite
             ];
             
-            shellHook = ''
+            shellHook = '''
               # 设置编译器
               export CC=clang
               export CXX=clang++
               
               # 交叉编译时修改为：
-              # export CC=${"$"}{crossPkgs.stdenv.cc}/bin/${"$"}{crossPkgs.stdenv.cc.targetPrefix}cc
-              # export CXX=${"$"}{crossPkgs.stdenv.cc}/bin/${"$"}{crossPkgs.stdenv.cc.targetPrefix}c++
+              # export CC=''${crossPkgs.stdenv.cc}/bin/''${crossPkgs.stdenv.cc.targetPrefix}cc
+              # export CXX=''${crossPkgs.stdenv.cc}/bin/''${crossPkgs.stdenv.cc.targetPrefix}c++
               
               echo "🔧 C++ development environment ready"
               echo "Compiler: $(clang++ --version | head -1)"
-            '';
+            ''';
           };
           
           # 构建配置（可选）
