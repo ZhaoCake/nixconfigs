@@ -6,7 +6,7 @@
     # 编译器和工具链
     clang
     clang-tools  # 包含 clangd
-    gcc
+    # gcc  # 与 clang 冲突，如需要请使用项目级 flake
     gdb
     lldb
     

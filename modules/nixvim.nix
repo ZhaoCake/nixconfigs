@@ -121,8 +121,12 @@
             installCargo = false;  # 使用系统的 cargo
             installRustc = false;  # 使用系统的 rustc
             settings = {
-              cargo.allFeatures = true;
-              checkOnSave.command = "clippy";
+              cargo = {
+                allFeatures = true;
+              };
+              check = {
+                command = "clippy";
+              };
             };
           };
           
