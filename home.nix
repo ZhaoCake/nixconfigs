@@ -21,6 +21,7 @@
     ./dev-envs/rust.nix       # 默认启用 Rust 环境
     ./dev-envs/cpp.nix        # 默认启用 C/C++ 环境
     ./dev-envs/python.nix     # 默认启用 Python 环境
+    ./dev-envs/bsv.nix        # Bluespec SystemVerilog 环境
     # ./dev-envs/nodejs.nix
   ];
 

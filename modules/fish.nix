@@ -137,6 +137,78 @@
         echo "   uv run python main.py     # Run with uv"
       '';
       
+      # 创建 BSV 项目
+      new-bsv-project = ''
+        # 检查参数
+        if test (count $argv) -eq 0
+          echo "Usage: new-bsv-project <project-name>"
+          return 1
+        end
+        
+        set project_name $argv[1]
+        set template_dir "$HOME/.local/share/bsv-templates"
+        
+        # 检查项目是否已存在
+        if test -d $project_name
+          echo "❌ Directory '$project_name' already exists"
+          return 1
+        end
+        
+        # 创建项目结构
+        echo "🚀 Creating Bluespec SystemVerilog project: $project_name"
+        mkdir -p $project_name/bsv_src
+        mkdir -p $project_name/verilator_src
+        
+        # 复制模板文件
+        cp $template_dir/flake.nix $project_name/
+        cp $template_dir/Makefile $project_name/
+        cp $template_dir/Top.bsv $project_name/bsv_src/
+        cp $template_dir/sim_main.cpp $project_name/verilator_src/
+        cp $template_dir/README.md $project_name/
+        
+        # 创建 .gitignore
+        echo "build/
+*.bo
+*.ba
+*.so
+*.o
+wave.vcd
+.direnv/
+result
+" > $project_name/.gitignore
+        
+        # 创建 .envrc for direnv
+        echo "use flake" > $project_name/.envrc
+        
+        # 进入项目目录
+        cd $project_name
+        
+        # 初始化 git
+        if command -v git >/dev/null
+          git init
+          echo "✅ Git repository initialized"
+        end
+        
+        # 允许 direnv
+        if command -v direnv >/dev/null
+          direnv allow
+          echo "✅ direnv configured"
+        end
+        
+        echo ""
+        echo "✨ Project '$project_name' created successfully!"
+        echo ""
+        echo "📝 Next steps:"
+        echo "   cd $project_name"
+        echo "   nix develop          # Enter development environment"
+        echo "   make help            # Show available targets"
+        echo "   make sim             # Compile and run Bluesim"
+        echo "   make verilator       # Build Verilator simulation"
+        echo "   gtkwave wave.vcd     # View waveforms"
+        echo ""
+        echo "   Or just: nvim bsv_src/Top.bsv"
+      '';
+      
       # 创建 C++ 项目
       new-cpp-project = ''
         # 检查参数
