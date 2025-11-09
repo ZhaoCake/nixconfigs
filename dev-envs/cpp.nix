@@ -102,8 +102,8 @@
               export CXX=clang++
               
               # 交叉编译时修改为：
-              # export CC=''${crossPkgs.stdenv.cc}/bin/''${crossPkgs.stdenv.cc.targetPrefix}cc
-              # export CXX=''${crossPkgs.stdenv.cc}/bin/''${crossPkgs.stdenv.cc.targetPrefix}c++
+              # export CC=''$''${crossPkgs.stdenv.cc}/bin/''$''${crossPkgs.stdenv.cc.targetPrefix}cc
+              # export CXX=''$''${crossPkgs.stdenv.cc}/bin/''$''${crossPkgs.stdenv.cc.targetPrefix}c++
               
               echo "🔧 C++ development environment ready"
               echo "Compiler: $(clang++ --version | head -1)"
