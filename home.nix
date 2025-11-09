@@ -60,12 +60,14 @@
     nix-direnv.enable = true;
   };
 
-  # Git 基础配置（可以根据需要调整）
+    # Git 基础配置（可以根据需要调整）
   programs.git = {
     enable = true;
     settings = {
       user.name = "cake";
-      user.email = "zhaocake@foxmail.com";  # 请修改为您的邮箱
+      user.email = "zhaocake@foxmail.com";
+      init.defaultBranch = "main";  # 设置默认分支为 main
+      advice.defaultBranchName = false;  # 禁用分支名警告
     };
   };
 

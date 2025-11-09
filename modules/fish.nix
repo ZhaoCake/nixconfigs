@@ -120,10 +120,10 @@
         uv init $project_name
         cd $project_name
         
-        # 初始化 git
+        # 初始化 git（uv 已经初始化了，只需 add）
         if command -v git >/dev/null
-          git init
-          echo "✅ Git repository initialized"
+          git add .
+          echo "✅ Git repository initialized and files staged"
         end
         
         echo ""
@@ -186,13 +186,8 @@ result
         # 初始化 git
         if command -v git >/dev/null
           git init
-          echo "✅ Git repository initialized"
-        end
-        
-        # 允许 direnv
-        if command -v direnv >/dev/null
-          direnv allow
-          echo "✅ direnv configured"
+          git add .
+          echo "✅ Git repository initialized and files staged"
         end
         
         echo ""
@@ -251,16 +246,11 @@ result
         # 进入项目目录
         cd $project_name
         
-        # 初始化 git（可选）
+        # 初始化 git
         if command -v git >/dev/null
           git init
-          echo "✅ Git repository initialized"
-        end
-        
-        # 允许 direnv
-        if command -v direnv >/dev/null
-          direnv allow
-          echo "✅ direnv configured"
+          git add .
+          echo "✅ Git repository initialized and files staged"
         end
         
         # 初始化 flake

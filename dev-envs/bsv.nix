@@ -46,11 +46,11 @@
           devShells.''${system}.default = pkgs.mkShell {
             buildInputs = with pkgs; [
               bluespec
-              verilog
+              iverilog
               verilator
               gtkwave
               gnumake
-              gcc
+              clang
               gdb
               cmake
               bear
