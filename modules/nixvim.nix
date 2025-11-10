@@ -47,7 +47,12 @@
     };
     
     # 主题配置
-    colorschemes.tokyonight.enable = true;
+    colorschemes.gruvbox = {
+      enable = true;
+      settings = {
+        transparent_mode = true;  # 透明背景（可选）
+      };
+    };
     
     # 插件配置
     plugins = {
@@ -148,6 +153,11 @@
               "--completion-style=detailed"
               "--function-arg-placeholders"
             ];
+          };
+          
+          # Scala/Chisel (Metals)
+          metals = {
+            enable = true;
           };
           
           # 可以根据需要添加更多 LSP

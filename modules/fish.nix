@@ -137,6 +137,53 @@
         echo "   uv run python main.py     # Run with uv"
       '';
       
+      # 创建 Chisel 项目
+      new-chisel-project = ''
+        if test (count $argv) -eq 0
+          echo "Usage: new-chisel-project <project-name>"
+          return 1
+        end
+        
+        set project_name $argv[1]
+        set template_dir "$HOME/.local/share/chisel-templates"
+        
+        if test -d $project_name
+          echo "❌ Directory '$project_name' already exists"
+          return 1
+        end
+        
+        echo "🔥 Creating Chisel project: $project_name"
+        mkdir -p $project_name/src/main/scala
+        mkdir -p $project_name/src/test/scala
+        mkdir -p $project_name/project
+        
+        cp $template_dir/build.sbt $project_name/
+        cp $template_dir/project/build.properties $project_name/project/
+        cp $template_dir/project/plugins.sbt $project_name/project/
+        cp $template_dir/src/main/scala/Top.scala $project_name/src/main/scala/
+        cp $template_dir/src/test/scala/CounterTest.scala $project_name/src/test/scala/
+        cp $template_dir/Makefile $project_name/
+        cp $template_dir/.gitignore $project_name/
+        cp $template_dir/README.md $project_name/
+        
+        cd $project_name
+        
+        if command -v git >/dev/null
+          git init
+          git add .
+          echo "✅ Git initialized"
+        end
+        
+        echo ""
+        echo "✨ Chisel project '$project_name' ready!"
+        echo ""
+        echo "📝 Next:"
+        echo "   cd $project_name"
+        echo "   sbt compile       # Compile"
+        echo "   sbt test          # Test"
+        echo "   make verilog      # Generate Verilog"
+      '';
+      
       # 创建 BSV 项目
       new-bsv-project = ''
         # 检查参数
@@ -191,17 +238,14 @@ result
         end
         
         echo ""
-        echo "✨ Project '$project_name' created successfully!"
+        echo "✨ BSV project '$project_name' ready!"
         echo ""
-        echo "📝 Next steps:"
+        echo "📝 Next:"
         echo "   cd $project_name"
-        echo "   nix develop          # Enter development environment"
-        echo "   make help            # Show available targets"
-        echo "   make sim             # Compile and run Bluesim"
-        echo "   make verilator       # Build Verilator simulation"
-        echo "   gtkwave wave.vcd     # View waveforms"
-        echo ""
-        echo "   Or just: nvim bsv_src/Top.bsv"
+        echo "   nix develop        # or just cd (direnv auto-loads)"
+        echo "   make verilog       # BSV → Verilog"
+        echo "   make verilator     # Build sim"
+        echo "   ./build/sim        # Run"
       '';
       
       # 创建 C++ 项目
