@@ -1,4 +1,4 @@
-# Chisel 3.7 开发环境
+# Chisel 7.0+ 开发环境
 { config, pkgs, ... }:
 
 {
@@ -21,11 +21,11 @@
 
   # Chisel 项目模板
   home.file.".local/share/chisel-templates/build.sbt".text = ''
-    scalaVersion := "2.13.12"
+    scalaVersion := "2.13.15"
 
     libraryDependencies ++= Seq(
-      "org.chipsalliance" %% "chisel" % "3.7.0",
-      "edu.berkeley.cs" %% "chiseltest" % "5.0.2" % "test"
+      "org.chipsalliance" %% "chisel" % "latest.release",
+      "edu.berkeley.cs" %% "chiseltest" % "latest.release" % "test"
     )
 
     scalacOptions ++= Seq(
@@ -37,7 +37,7 @@
   '';
 
   home.file.".local/share/chisel-templates/project/build.properties".text = ''
-    sbt.version=1.9.7
+    sbt.version=1.10.5
   '';
 
   home.file.".local/share/chisel-templates/project/plugins.sbt".text = ''
@@ -118,7 +118,7 @@
   '';
 
   home.file.".local/share/chisel-templates/README.md".text = ''
-    # Chisel 3.7 Project
+    # Chisel 7.0 Project
 
     ```bash
     sbt compile         # Compile Scala
@@ -127,6 +127,6 @@
     # or: make verilog
     ```
 
-    Generated Verilog: `generated/Counter.v`
+    Generated Verilog: `generated/` (split per module)
   '';
 }

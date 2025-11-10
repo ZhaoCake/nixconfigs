@@ -22,7 +22,7 @@
     ./dev-envs/cpp.nix        # 默认启用 C/C++ 环境
     ./dev-envs/python.nix     # 默认启用 Python 环境
     ./dev-envs/bsv.nix        # Bluespec SystemVerilog 环境
-    ./dev-envs/chisel.nix     # Chisel 3.7 环境
+    ./dev-envs/chisel.nix     # Chisel 7.0+ 环境
     # ./dev-envs/nodejs.nix
   ];
 
