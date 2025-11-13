@@ -1,0 +1,21 @@
+# Build artifacts
+out/
+build/
+obj_dir/
+
+# IDE
+.bsp/
+.metals/
+.vscode/
+.idea/
+
+# Simulation
+waveform.vcd
+*.log
+
+# Scala
+*.class
+target/
+
+# direnv
+.direnv/

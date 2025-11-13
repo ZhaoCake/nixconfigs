@@ -137,121 +137,6 @@
         echo "   uv run python main.py     # Run with uv"
       '';
       
-      # 创建 Chisel 项目
-      new-chisel-project = ''
-        if test (count $argv) -eq 0
-          echo "Usage: new-chisel-project <project-name>"
-          return 1
-        end
-        
-        set project_name $argv[1]
-        set template_dir "$HOME/.local/share/chisel-templates"
-        
-        if test -d $project_name
-          echo "❌ Directory '$project_name' already exists"
-          return 1
-        end
-        
-        echo "🔥 Creating Chisel project: $project_name"
-        mkdir -p $project_name/your_package_name/src
-        mkdir -p $project_name/your_package_name/test/src
-        mkdir -p $project_name/verilator_csrc
-        
-        cp $template_dir/build.mill $project_name/
-        cp $template_dir/.mill-version $project_name/
-        cp $template_dir/Makefile $project_name/
-        cp $template_dir/flake.nix $project_name/
-        cp $template_dir/.envrc $project_name/
-        cp $template_dir/your_package_name/src/Elaborate.scala $project_name/your_package_name/src/
-        cp $template_dir/your_package_name/src/YourMain.scala $project_name/your_package_name/src/
-        cp $template_dir/your_package_name/test/src/YourMainTest.scala $project_name/your_package_name/test/src/
-        cp $template_dir/verilator_csrc/sim_main.cc $project_name/verilator_csrc/
-        cp $template_dir/.gitignore $project_name/
-        cp $template_dir/README.md $project_name/
-        
-        cd $project_name
-        
-        if command -v git >/dev/null
-          git init
-          git add .
-          echo "✅ Git initialized"
-        end
-        
-        echo ""
-        echo "✨ Chisel project '$project_name' ready!"
-        echo ""
-        echo "📝 Next:"
-        echo "   cd $project_name"
-        echo "   make verilog      # Generate Verilog"
-        echo "   make vsim         # Run Verilator sim"
-        echo "   make test         # Run tests"
-        echo "   make help         # Show all targets"
-      '';
-      
-      # 创建 BSV 项目
-      new-bsv-project = ''
-        # 检查参数
-        if test (count $argv) -eq 0
-          echo "Usage: new-bsv-project <project-name>"
-          return 1
-        end
-        
-        set project_name $argv[1]
-        set template_dir "$HOME/.local/share/bsv-templates"
-        
-        # 检查项目是否已存在
-        if test -d $project_name
-          echo "❌ Directory '$project_name' already exists"
-          return 1
-        end
-        
-        # 创建项目结构
-        echo "🚀 Creating Bluespec SystemVerilog project: $project_name"
-        mkdir -p $project_name/bsv_src
-        mkdir -p $project_name/verilator_src
-        
-        # 复制模板文件
-        cp $template_dir/flake.nix $project_name/
-        cp $template_dir/Makefile $project_name/
-        cp $template_dir/Top.bsv $project_name/bsv_src/
-        cp $template_dir/sim_main.cpp $project_name/verilator_src/
-        cp $template_dir/README.md $project_name/
-        
-        # 创建 .gitignore
-        echo "build/
-*.bo
-*.ba
-*.so
-*.o
-wave.vcd
-.direnv/
-result
-" > $project_name/.gitignore
-        
-        # 创建 .envrc for direnv
-        echo "use flake" > $project_name/.envrc
-        
-        # 进入项目目录
-        cd $project_name
-        
-        # 初始化 git
-        if command -v git >/dev/null
-          git init
-          git add .
-          echo "✅ Git repository initialized and files staged"
-        end
-        
-        echo ""
-        echo "✨ BSV project '$project_name' ready!"
-        echo ""
-        echo "📝 Next:"
-        echo "   cd $project_name"
-        echo "   nix develop        # or just cd (direnv auto-loads)"
-        echo "   make verilog       # BSV → Verilog"
-        echo "   make verilator     # Build sim"
-        echo "   ./build/sim        # Run"
-      '';
-      
       # 创建 C++ 项目
       new-cpp-project = ''
         # 检查参数
@@ -315,6 +200,141 @@ result
         echo "   ./build/main         # Run"
         echo ""
         echo "   Or just: nvim src/main.cpp"
+      '';
+      
+      # 创建硬件开发项目（SystemVerilog/BSV/Chisel）
+      nix-init = ''
+        set -l DEVSHELLS_DIR "$HOME/.nixconfigs/devShells"
+        
+        # 显示帮助信息
+        function _nix_init_help
+          echo "用法: nix-init <环境类型> [项目名]"
+          echo ""
+          echo "可用的环境类型:"
+          echo "  sv, systemverilog  - SystemVerilog + Verilator 项目"
+          echo "  bsv                - Bluespec SystemVerilog 项目"
+          echo "  chisel             - Chisel 硬件开发项目"
+          echo ""
+          echo "示例:"
+          echo "  nix-init sv my-counter        # 创建 my-counter 项目"
+          echo "  nix-init bsv                  # 在当前目录初始化"
+          echo "  nix-init chisel ~/riscv-core  # 在指定路径创建"
+        end
+        
+        # 检查参数
+        if test (count $argv) -lt 1
+          _nix_init_help
+          return 1
+        end
+        
+        set -l env_type $argv[1]
+        set -l project_name $argv[2]
+        
+        # 环境名称别名映射
+        switch $env_type
+          case sv
+            set env_type systemverilog
+        end
+        
+        # 验证环境类型
+        if not contains $env_type systemverilog bsv chisel
+          echo "❌ 未知的环境类型: '$env_type'"
+          echo ""
+          _nix_init_help
+          return 1
+        end
+        
+        # 确定源模板目录
+        set -l template_dir "$DEVSHELLS_DIR/$env_type"
+        
+        if not test -d $template_dir
+          echo "❌ 模板目录不存在: $template_dir"
+          return 1
+        end
+        
+        # 确定目标目录
+        if test -n "$project_name"
+          # 如果提供了项目名，创建新目录
+          set -l target_dir $project_name
+          
+          # 处理绝对路径和相对路径
+          if not string match -q '/*' $target_dir
+            set target_dir "$PWD/$target_dir"
+          end
+          
+          if test -e $target_dir
+            echo "❌ 目标路径已存在: $target_dir"
+            return 1
+          end
+          
+          echo "📁 创建项目目录: $target_dir"
+          mkdir -p $target_dir
+        else
+          # 如果没有提供项目名，在当前目录初始化
+          set -l target_dir $PWD
+          
+          # 检查当前目录是否为空
+          if test (count (ls -A $target_dir 2>/dev/null | grep -v '^\\.')) -gt 0
+            echo "⚠️  当前目录不为空，是否继续? [y/N]"
+            read -l confirm
+            if test "$confirm" != "y" -a "$confirm" != "Y"
+              echo "已取消"
+              return 0
+            end
+          end
+        end
+        
+        # 复制模板文件
+        echo "📋 复制模板文件..."
+        cp -r $template_dir/* $target_dir/ 2>/dev/null
+        cp $template_dir/.envrc $target_dir/ 2>/dev/null
+        cp $template_dir/.gitignore $target_dir/ 2>/dev/null
+        cp $template_dir/.mill-version $target_dir/ 2>/dev/null
+        
+        # 进入项目目录
+        cd $target_dir
+        
+        # 初始化 git 仓库
+        if not test -d .git
+          if command -v git >/dev/null
+            echo "🔧 初始化 Git 仓库..."
+            git init
+            git add .
+            git commit -m "Initial commit: $env_type project template" -q
+          end
+        end
+        
+        # 激活 direnv
+        if command -v direnv >/dev/null
+          echo "✨ 授权 direnv..."
+          direnv allow
+        end
+        
+        echo ""
+        echo "✅ 项目初始化完成!"
+        echo ""
+        echo "📍 项目位置: $target_dir"
+        echo "🔧 环境类型: $env_type"
+        echo ""
+        echo "📝 下一步:"
+        
+        switch $env_type
+          case systemverilog
+            echo "   make sim     - 构建并运行仿真"
+            echo "   make trace   - 生成波形文件"
+            echo "   make lint    - 检查代码"
+          case bsv
+            echo "   make verilog   - 编译 BSV → Verilog"
+            echo "   make verilator - 运行 Verilator 仿真"
+            echo "   make iverilog  - 运行 Icarus Verilog 仿真"
+          case chisel
+            echo "   make verilog   - 生成 Verilog"
+            echo "   make test      - 运行测试"
+            echo "   make vsim      - 运行 Verilator 仿真"
+        end
+        
+        echo ""
+        echo "查看 README.md 获取更多信息"
       '';
     };
   };

@@ -19,14 +19,14 @@
     ./modules/fastfetch.nix   # 系统信息显示
     ./modules/tmux.nix        # 终端复用器
     ./modules/alacritty.nix   # 终端模拟器配置
-    # 开发环境配置
-    ./dev-envs/rust.nix       # 默认启用 Rust 环境
-    ./dev-envs/cpp.nix        # 默认启用 C/C++ 环境
-    ./dev-envs/python.nix     # 默认启用 Python 环境
-    ./dev-envs/bsv.nix        # Bluespec SystemVerilog 环境
-    ./dev-envs/systemverilog.nix  # SystemVerilog + Verilator 环境
-    # ./dev-envs/chisel.nix     # Chisel 7.0+ 环境
-    # ./dev-envs/nodejs.nix
+    # 开发环境配置（通用工具，全局启用）
+    ./dev-envs/rust.nix       # Rust 环境
+    ./dev-envs/cpp.nix        # C/C++ 环境
+    ./dev-envs/python.nix     # Python 环境
+    # ./dev-envs/nodejs.nix   # Node.js 环境（按需启用）
+    
+    # 硬件开发环境已移至 devShells/ 目录，使用 direnv 按需激活
+    # 见 devShells/README.md
   ];
 
   # 基础包安装

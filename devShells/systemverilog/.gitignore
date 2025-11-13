@@ -1,0 +1,13 @@
+# Build artifacts
+build/
+obj_dir/
+
+# Waveforms
+*.vcd
+*.fst
+
+# Logs
+*.log
+
+# direnv
+.direnv/

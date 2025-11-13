@@ -1,7 +1,3 @@
-这是考虑到之后包越来越多可能出现冲突的情况做的预备方案。
-
----
-
 # 开发环境 (Development Shells)
 
 ## 设计理念
@@ -15,18 +11,38 @@
 
 ## 使用方法
 
-### 1. 创建新项目
+### 快速创建项目（推荐）
+
+使用 `nix-init` 函数快速创建项目：
 
 ```bash
-# 复制对应的开发环境模板
-cp -r ~/.nixconfigs/devShells/rust ~/projects/my-rust-project
-cd ~/projects/my-rust-project
+# 创建新项目
+nix-init sv my-counter              # SystemVerilog 项目
+nix-init bsv my-processor           # Bluespec 项目  
+nix-init chisel ~/projects/riscv    # Chisel 项目
 
-# direnv 会自动检测 .envrc 并提示
+# 在当前目录初始化
+mkdir my-project && cd my-project
+nix-init sv                          # 在当前目录初始化
+
+# 环境会自动激活（通过 direnv）
+make help                            # 查看可用命令
+```
+
+### 手动复制模板
+
+如果不使用 `nix-init`：
+
+```bash
+# 复制模板
+cp -r ~/.nixconfigs/devShells/systemverilog ~/projects/my-sv-project
+cd ~/projects/my-sv-project
+
+# 激活环境
 direnv allow
 ```
 
-### 2. 进入已有项目
+### 进入已有项目
 
 如果项目已有 `flake.nix` 和 `.envrc`：
 
@@ -36,34 +52,23 @@ direnv allow  # 首次需要授权
 # 环境会自动激活，所有依赖都可用
 ```
 
-### 3. 手动激活环境
+### 手动激活环境
 
 不使用 direnv 的情况：
 
 ```bash
 nix develop  # 使用项目的 flake.nix
-# 或者
-nix develop ~/.nixconfigs/devShells/rust  # 使用模板
-```
-
-### 4. 临时使用某个工具
-
-```bash
-# 不进入完整环境，只是运行一个命令
-nix run ~/.nixconfigs/devShells/rust#rustc -- --version
 ```
 
 ## 可用的开发环境
 
-| 环境 | 目录 | 包含工具 |
-|------|------|----------|
-| Rust | `rust/` | rustc, cargo, rust-analyzer, clippy, rustfmt |
-| C/C++ | `cpp/` | gcc, clang, cmake, gdb, lldb, clang-tools |
-| Python | `python/` | python3, pip, ipython, pytest, poetry |
-| BSV | `bsv/` | bluespec, verilator, gtkwave, iverilog |
-| SystemVerilog | `systemverilog/` | verilator, gtkwave, verible |
-| Chisel | `chisel/` | mill, scala, sbt, verilator, gtkwave |
-| Node.js | `nodejs/` | node, npm, pnpm, yarn |
+| 环境 | 目录 | 包含工具 | 说明 |
+|------|------|----------|------|
+| SystemVerilog | `systemverilog/` | verilator, gtkwave, verible | 完整项目模板 |
+| BSV | `bsv/` | bluespec, verilator, iverilog, gtkwave | 完整项目模板 |
+| Chisel | `chisel/` | mill, scala, sbt, verilator, gtkwave | 完整项目模板 |
+
+**注意**：Rust、C/C++、Python 等通用开发工具已在全局安装（通过 `home.nix`），不需要单独的 devShell。
 
 ## 自定义开发环境
 

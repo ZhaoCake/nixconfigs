@@ -49,7 +49,7 @@
       set -g status-position bottom
       set -g status-justify left
       set -g status-style 'bg=colour234 fg=colour137 dim'
-      set -g status-left ''
+      set -g status-left ""
       set -g status-right '#[fg=colour233,bg=colour241,bold] %Y-%m-%d #[fg=colour233,bg=colour245,bold] %H:%M:%S '
       set -g status-right-length 50
       set -g status-left-length 20
