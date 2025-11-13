@@ -153,16 +153,19 @@
         end
         
         echo "🔥 Creating Chisel project: $project_name"
-        mkdir -p $project_name/src/main/scala
-        mkdir -p $project_name/src/test/scala
-        mkdir -p $project_name/project
+        mkdir -p $project_name/your_package_name/src
+        mkdir -p $project_name/your_package_name/test/src
+        mkdir -p $project_name/verilator_csrc
         
-        cp $template_dir/build.sbt $project_name/
-        cp $template_dir/project/build.properties $project_name/project/
-        cp $template_dir/project/plugins.sbt $project_name/project/
-        cp $template_dir/src/main/scala/Top.scala $project_name/src/main/scala/
-        cp $template_dir/src/test/scala/CounterTest.scala $project_name/src/test/scala/
+        cp $template_dir/build.mill $project_name/
+        cp $template_dir/.mill-version $project_name/
         cp $template_dir/Makefile $project_name/
+        cp $template_dir/flake.nix $project_name/
+        cp $template_dir/.envrc $project_name/
+        cp $template_dir/your_package_name/src/Elaborate.scala $project_name/your_package_name/src/
+        cp $template_dir/your_package_name/src/YourMain.scala $project_name/your_package_name/src/
+        cp $template_dir/your_package_name/test/src/YourMainTest.scala $project_name/your_package_name/test/src/
+        cp $template_dir/verilator_csrc/sim_main.cc $project_name/verilator_csrc/
         cp $template_dir/.gitignore $project_name/
         cp $template_dir/README.md $project_name/
         
@@ -179,9 +182,10 @@
         echo ""
         echo "📝 Next:"
         echo "   cd $project_name"
-        echo "   sbt compile       # Compile"
-        echo "   sbt test          # Test"
         echo "   make verilog      # Generate Verilog"
+        echo "   make vsim         # Run Verilator sim"
+        echo "   make test         # Run tests"
+        echo "   make help         # Show all targets"
       '';
       
       # 创建 BSV 项目

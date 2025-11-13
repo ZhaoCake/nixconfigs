@@ -17,12 +17,15 @@
     ./modules/starship.nix
     ./modules/nixvim.nix
     ./modules/fastfetch.nix   # 系统信息显示
+    ./modules/tmux.nix        # 终端复用器
+    ./modules/alacritty.nix   # 终端模拟器配置
     # 开发环境配置
     ./dev-envs/rust.nix       # 默认启用 Rust 环境
     ./dev-envs/cpp.nix        # 默认启用 C/C++ 环境
     ./dev-envs/python.nix     # 默认启用 Python 环境
     ./dev-envs/bsv.nix        # Bluespec SystemVerilog 环境
-    ./dev-envs/chisel.nix     # Chisel 7.0+ 环境
+    ./dev-envs/systemverilog.nix  # SystemVerilog + Verilator 环境
+    # ./dev-envs/chisel.nix     # Chisel 7.0+ 环境
     # ./dev-envs/nodejs.nix
   ];
 

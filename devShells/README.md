@@ -1,0 +1,163 @@
+这是考虑到之后包越来越多可能出现冲突的情况做的预备方案。
+
+---
+
+# 开发环境 (Development Shells)
+
+## 设计理念
+
+为了避免全局包冲突，所有开发环境都使用 **按需激活** 的方式：
+
+- 每个开发环境是独立的 Nix flake
+- 通过 `direnv` 在进入项目目录时自动激活
+- 不同项目的依赖完全隔离，互不影响
+- 可以同时维护多个不同版本的工具链
+
+## 使用方法
+
+### 1. 创建新项目
+
+```bash
+# 复制对应的开发环境模板
+cp -r ~/.nixconfigs/devShells/rust ~/projects/my-rust-project
+cd ~/projects/my-rust-project
+
+# direnv 会自动检测 .envrc 并提示
+direnv allow
+```
+
+### 2. 进入已有项目
+
+如果项目已有 `flake.nix` 和 `.envrc`：
+
+```bash
+cd ~/projects/my-project
+direnv allow  # 首次需要授权
+# 环境会自动激活，所有依赖都可用
+```
+
+### 3. 手动激活环境
+
+不使用 direnv 的情况：
+
+```bash
+nix develop  # 使用项目的 flake.nix
+# 或者
+nix develop ~/.nixconfigs/devShells/rust  # 使用模板
+```
+
+### 4. 临时使用某个工具
+
+```bash
+# 不进入完整环境，只是运行一个命令
+nix run ~/.nixconfigs/devShells/rust#rustc -- --version
+```
+
+## 可用的开发环境
+
+| 环境 | 目录 | 包含工具 |
+|------|------|----------|
+| Rust | `rust/` | rustc, cargo, rust-analyzer, clippy, rustfmt |
+| C/C++ | `cpp/` | gcc, clang, cmake, gdb, lldb, clang-tools |
+| Python | `python/` | python3, pip, ipython, pytest, poetry |
+| BSV | `bsv/` | bluespec, verilator, gtkwave, iverilog |
+| SystemVerilog | `systemverilog/` | verilator, gtkwave, verible |
+| Chisel | `chisel/` | mill, scala, sbt, verilator, gtkwave |
+| Node.js | `nodejs/` | node, npm, pnpm, yarn |
+
+## 自定义开发环境
+
+### 基础模板
+
+创建 `flake.nix`：
+
+```nix
+{
+  description = "我的开发环境";
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  };
+
+  outputs = { self, nixpkgs }:
+    let
+      system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
+    in
+    {
+      devShells.${system}.default = pkgs.mkShell {
+        buildInputs = with pkgs; [
+          # 在这里添加你需要的包
+          git
+          curl
+        ];
+        
+        shellHook = ''
+          echo "🚀 开发环境已激活"
+        '';
+      };
+    };
+}
+```
+
+创建 `.envrc`：
+
+```bash
+use flake
+```
+
+然后运行 `direnv allow`。
+
+## 优势
+
+✅ **隔离性**：每个项目的依赖互不影响  
+✅ **可重现**：flake.lock 锁定所有依赖版本  
+✅ **便捷性**：direnv 自动激活，无需手动切换  
+✅ **灵活性**：可以为不同项目使用不同版本的工具  
+✅ **整洁性**：全局环境保持简洁，只安装通用工具  
+
+## 全局 vs 项目环境
+
+### 全局安装（home.nix）
+- 基础工具：git, curl, wget, ssh
+- 编辑器：neovim (nixvim)
+- Shell：fish, starship
+- 终端工具：tmux, alacritty, ripgrep, fd, bat
+
+### 项目环境（devShells）
+- 编程语言工具链
+- 构建工具
+- 调试器
+- 特定版本的依赖
+
+## 故障排除
+
+### direnv 未自动激活
+```bash
+# 检查 direnv 状态
+direnv status
+
+# 重新加载
+direnv reload
+```
+
+### flake 更新
+```bash
+# 更新 flake.lock
+nix flake update
+
+# 重建环境
+direnv reload
+```
+
+### 清理未使用的环境
+```bash
+# 垃圾回收
+nix-collect-garbage -d
+```
+
+## 参考资料
+
+- [Nix Flakes](https://nixos.wiki/wiki/Flakes)
+- [direnv](https://direnv.net/)
+- [nix develop](https://nixos.org/manual/nix/stable/command-ref/new-cli/nix3-develop.html)
