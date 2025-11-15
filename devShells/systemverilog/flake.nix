@@ -16,6 +16,9 @@
           # Verilator - 高性能开源仿真器
           verilator
           
+          # Python (Verilator 需要)
+          python3
+          
           # 波形查看器
           gtkwave
           
@@ -25,6 +28,9 @@
           # 构建工具
           gnumake
           gcc
+          
+          # C++ 标准库 (Verilator 生成的 C++ 代码需要)
+          stdenv.cc.cc.lib
         ];
         
         shellHook = ''

@@ -158,9 +158,11 @@
         end
         
         # 确定目标目录
+        set target_dir ""
+        
         if test -n "$project_name"
           # 如果提供了项目名，创建新目录
-          set -l target_dir $project_name
+          set target_dir $project_name
           
           # 处理绝对路径和相对路径
           if not string match -q '/*' $target_dir
@@ -176,7 +178,7 @@
           mkdir -p $target_dir
         else
           # 如果没有提供项目名，在当前目录初始化
-          set -l target_dir $PWD
+          set target_dir $PWD
           
           # 检查当前目录是否为空
           if test (count (ls -A $target_dir 2>/dev/null | grep -v '^\\.')) -gt 0
