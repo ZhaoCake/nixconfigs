@@ -49,9 +49,15 @@ jobs:
         nix eval .#homeConfigurations.cake.config.home.packages --apply 'builtins.length' > /dev/null
         echo "✅ All modules imported successfully"
     
+    - name: Test devShells
+      run: |
+        echo "🧪 Testing devShell environments..."
+        bash .github/scripts/test-devshells.sh
+    
     - name: Summary
       if: success()
       run: |
         echo "✨ Configuration check passed!"
         echo "📦 Home Manager configuration builds successfully"
+        echo "✅ All devShells are working"
         echo "🎉 Ready to deploy"

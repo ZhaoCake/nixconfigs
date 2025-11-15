@@ -99,109 +99,6 @@
         fastfetch --config ~/.config/fastfetch/config-minimal.jsonc
       '';
       
-      # Python/uv 相关函数
-      new-python-project = ''
-        # 使用 uv 创建新的 Python 项目
-        if test (count $argv) -eq 0
-          echo "Usage: new-python-project <project-name>"
-          return 1
-        end
-        
-        set project_name $argv[1]
-        
-        if test -d $project_name
-          echo "❌ Directory '$project_name' already exists"
-          return 1
-        end
-        
-        echo "🐍 Creating Python project with uv: $project_name"
-        
-        # 使用 uv 创建项目
-        uv init $project_name
-        cd $project_name
-        
-        # 初始化 git（uv 已经初始化了，只需 add）
-        if command -v git >/dev/null
-          git add .
-          echo "✅ Git repository initialized and files staged"
-        end
-        
-        echo ""
-        echo "✨ Project '$project_name' created!"
-        echo ""
-        echo "📝 Next steps:"
-        echo "   cd $project_name"
-        echo "   uv venv              # Create virtual environment"
-        echo "   source .venv/bin/activate.fish"
-        echo "   uv pip install <package>  # Install packages"
-        echo "   uv run python main.py     # Run with uv"
-      '';
-      
-      # 创建 C++ 项目
-      new-cpp-project = ''
-        # 检查参数
-        if test (count $argv) -eq 0
-          echo "Usage: new-cpp-project <project-name>"
-          return 1
-        end
-        
-        set project_name $argv[1]
-        set template_dir "$HOME/Templates/cpp-project"
-        
-        # 检查模板目录
-        if not test -d $template_dir
-          echo "❌ Template directory not found: $template_dir"
-          echo "   Run 'hmswitch' to create templates"
-          return 1
-        end
-        
-        # 检查项目是否已存在
-        if test -d $project_name
-          echo "❌ Directory '$project_name' already exists"
-          return 1
-        end
-        
-        # 创建项目
-        echo "🚀 Creating C++ project: $project_name"
-        mkdir -p $project_name/src
-        
-        # 复制模板文件
-        cp $template_dir/flake.nix $project_name/
-        cp $template_dir/CMakeLists.txt $project_name/
-        cp $template_dir/src/main.cpp $project_name/src/
-        cp $template_dir/.envrc $project_name/
-        cp $template_dir/.gitignore $project_name/
-        cp $template_dir/README.md $project_name/
-        
-        # 替换项目名称
-        sed -i "s/MyProject/$project_name/g" $project_name/CMakeLists.txt
-        
-        # 进入项目目录
-        cd $project_name
-        
-        # 初始化 git
-        if command -v git >/dev/null
-          git init
-          git add .
-          echo "✅ Git repository initialized and files staged"
-        end
-        
-        # 初始化 flake
-        nix flake update
-        
-        echo ""
-        echo "✨ Project '$project_name' created successfully!"
-        echo ""
-        echo "📝 Next steps:"
-        echo "   cd $project_name"
-        echo "   nix develop          # Enter development environment"
-        echo "   cmake -B build       # Configure build"
-        echo "   cmake --build build  # Build project"
-        echo "   ./build/main         # Run"
-        echo ""
-        echo "   Or just: nvim src/main.cpp"
-      '';
-      
       # 创建硬件开发项目（SystemVerilog/BSV/Chisel）
       nix-init = ''
         set -l DEVSHELLS_DIR "$HOME/.nixconfigs/devShells"
@@ -211,14 +108,20 @@
           echo "用法: nix-init <环境类型> [项目名]"
           echo ""
           echo "可用的环境类型:"
-          echo "  sv, systemverilog  - SystemVerilog + Verilator 项目"
-          echo "  bsv                - Bluespec SystemVerilog 项目"
-          echo "  chisel             - Chisel 硬件开发项目"
+          echo "  通用开发:"
+          echo "    rust               - Rust 项目"
+          echo "    cpp                - C++ 项目"
+          echo "    python, py         - Python 项目"
+          echo ""
+          echo "  硬件开发:"
+          echo "    sv, systemverilog  - SystemVerilog + Verilator"
+          echo "    bsv                - Bluespec SystemVerilog"
+          echo "    chisel             - Chisel 硬件设计"
           echo ""
           echo "示例:"
-          echo "  nix-init sv my-counter        # 创建 my-counter 项目"
-          echo "  nix-init bsv                  # 在当前目录初始化"
-          echo "  nix-init chisel ~/riscv-core  # 在指定路径创建"
+          echo "  nix-init rust my-app          # 创建 Rust 项目"
+          echo "  nix-init cpp                  # 在当前目录初始化 C++"
+          echo "  nix-init py ~/ml-project      # 在指定路径创建 Python 项目"
         end
         
         # 检查参数
@@ -234,10 +137,12 @@
         switch $env_type
           case sv
             set env_type systemverilog
+          case py
+            set env_type python
         end
         
         # 验证环境类型
-        if not contains $env_type systemverilog bsv chisel
+        if not contains $env_type rust cpp python systemverilog bsv chisel
           echo "❌ 未知的环境类型: '$env_type'"
           echo ""
           _nix_init_help
@@ -319,6 +224,18 @@
         echo "📝 下一步:"
         
         switch $env_type
+          case rust
+            echo "   cargo init       - 初始化项目"
+            echo "   cargo build      - 构建项目"
+            echo "   cargo run        - 运行项目"
+          case cpp
+            echo "   cmake -B build   - 配置构建"
+            echo "   cmake --build build - 构建项目"
+            echo "   ./build/main     - 运行"
+          case python
+            echo "   uv venv          - 创建虚拟环境"
+            echo "   uv pip install   - 安装包"
+            echo "   python main.py   - 运行"
           case systemverilog
             echo "   make sim     - 构建并运行仿真"
             echo "   make trace   - 生成波形文件"
@@ -326,11 +243,9 @@
           case bsv
             echo "   make verilog   - 编译 BSV → Verilog"
             echo "   make verilator - 运行 Verilator 仿真"
-            echo "   make iverilog  - 运行 Icarus Verilog 仿真"
           case chisel
             echo "   make verilog   - 生成 Verilog"
             echo "   make test      - 运行测试"
-            echo "   make vsim      - 运行 Verilator 仿真"
         end
         
         echo ""

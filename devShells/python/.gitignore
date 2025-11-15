@@ -1,0 +1,27 @@
+# Python 缓存
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# 虚拟环境
+.venv/
+venv/
+ENV/
+
+# 测试
+.pytest_cache/
+.coverage
+htmlcov/
+
+# 工具
+.mypy_cache/
+.ruff_cache/
+
+# direnv
+.direnv/
+
+# 分发/打包
+dist/
+build/
+*.egg-info/

@@ -9,6 +9,8 @@
 - 不同项目的依赖完全隔离，互不影响
 - 可以同时维护多个不同版本的工具链
 
+> 因为在nix环境下，如需临时使用某环境，用nix-shell -p <package>即可，无需全局安装。故彻底移除原dev-envs目录。
+
 ## 使用方法
 
 ### 快速创建项目（推荐）
@@ -62,13 +64,21 @@ nix develop  # 使用项目的 flake.nix
 
 ## 可用的开发环境
 
-| 环境 | 目录 | 包含工具 | 说明 |
-|------|------|----------|------|
-| SystemVerilog | `systemverilog/` | verilator, gtkwave, verible | 完整项目模板 |
-| BSV | `bsv/` | bluespec, verilator, iverilog, gtkwave | 完整项目模板 |
-| Chisel | `chisel/` | mill, scala, sbt, verilator, gtkwave | 完整项目模板 |
+### 通用开发
 
-**注意**：Rust、C/C++、Python 等通用开发工具已在全局安装（通过 `home.nix`），不需要单独的 devShell。
+| 环境 | 目录 | 包含工具 |
+|------|------|----------|
+| Rust | `rust/` | rustc, cargo, clippy, rust-analyzer |
+| C++ | `cpp/` | clang, gcc, cmake, clangd, gdb |
+| Python | `python/` | python3.12, uv, pip, pytest, black, ruff |
+
+### 硬件开发
+
+| 环境 | 目录 | 包含工具 |
+|------|------|----------|
+| SystemVerilog | `systemverilog/` | verilator, gtkwave, verible |
+| BSV | `bsv/` | bluespec, verilator, iverilog, gtkwave |
+| Chisel | `chisel/` | mill, scala, sbt, verilator, gtkwave |
 
 ## 自定义开发环境
 
