@@ -15,7 +15,7 @@ verilog:
 	@echo "✅ Verilog: $(VDIR)/mk$(TOP_MODULE).v"
 
 verilator: verilog
-	@verilator -Wall -Wno-UNUSED --trace --cc --exe --build \
+	@verilator -Wall -Wno-UNUSED --no-timing --trace --cc --exe --build \
 	    $(VDIR)/mk$(TOP_MODULE).v $(VSRC)/sim_main.cpp \
 	    -o $(BUILD)/sim
 	@echo "✅ Run: ./$(BUILD)/sim"

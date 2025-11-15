@@ -20,6 +20,9 @@
           iverilog      # Icarus Verilog
           verilator     # 高级仿真器
           
+          # Python (Verilator 需要)
+          python3
+          
           # 波形查看器
           gtkwave
           
@@ -27,6 +30,9 @@
           gnumake
           gcc
           gdb
+          
+          # C++ 标准库
+          stdenv.cc.cc.lib
         ];
         
         shellHook = ''
