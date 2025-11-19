@@ -2,9 +2,12 @@
 
 ![CI Status](https://github.com/YOUR_USERNAME/nixconfigs/workflows/CI%20-%20Nix%20Configuration%20Check/badge.svg)
 
-这是一个优雅的、模块化的 Nix + Home Manager 配置，用于在 Arch Linux 上管理用户级别的开发环境。
+这是一个优雅的、模块化的 Nix + Home Manager 配置，用于管理用户级别的开发环境。
 
-> **自动化测试**: 每次推送代码时，GitHub Actions 会自动验证配置的正确性。
+> **✨ 特性**: 
+> - 🏠 本地安装：支持 Arch Linux 等发行版的用户级 Nix 安装
+> - ☁️ 云端使用：也可在 GitHub Codespaces 中使用（详见 [CODESPACES.md](CODESPACES.md)）
+> - 🔄 自动化测试：每次推送代码时自动验证配置正确性
 
 ## 📁 项目结构
 
