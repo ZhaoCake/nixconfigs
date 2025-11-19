@@ -225,6 +225,15 @@
       which-key = {
         enable = true;
       };
+      
+      # Markdown 预览
+      markdown-preview = {
+        enable = true;
+        settings = {
+          auto_close = false;
+          theme = "dark";
+        };
+      };
     };
     
     # 键位映射
@@ -285,6 +294,20 @@
         key = "<leader>h";
         action = "<cmd>nohlsearch<CR>";
         options.desc = "Clear search highlight";
+      }
+      
+      # Markdown 预览
+      {
+        mode = "n";
+        key = "<leader>mp";
+        action = "<cmd>MarkdownPreview<CR>";
+        options.desc = "Markdown preview";
+      }
+      {
+        mode = "n";
+        key = "<leader>ms";
+        action = "<cmd>MarkdownPreviewStop<CR>";
+        options.desc = "Stop markdown preview";
       }
     ];
   };

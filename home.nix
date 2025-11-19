@@ -18,7 +18,7 @@
     ./modules/nixvim.nix
     ./modules/fastfetch.nix   # 系统信息显示
     ./modules/tmux.nix        # 终端复用器
-    ./modules/alacritty.nix   # 终端模拟器配置
+    # ./modules/alacritty.nix   # 终端模拟器配置
     
     # 所有开发环境已移至 devShells/ 目录，使用 direnv 按需激活
     # 使用 nix-init 命令快速创建项目
@@ -46,6 +46,9 @@
     
     # 格式化工具
     nixpkgs-fmt  # Nix 代码格式化
+    
+    # Markdown 工具
+    glow  # Markdown 预览工具
   ];
 
   # 环境变量
