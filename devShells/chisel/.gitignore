@@ -1,21 +1,23 @@
-# Build artifacts
-out/
+*.*
+*
+!*/
+!Makefile
+!*.mk
+!*.scala
+!*.[cSh]
+!*.v
+!*.cpp
+!*.cc
+!.gitignore
+!.scalafmt.conf
+!README.md
 build/
-obj_dir/
 
-# IDE
+# mill
+!*.mill
+!.mill-version
+out/
 .bsp/
-.metals/
-.vscode/
 .idea/
-
-# Simulation
-waveform.vcd
-*.log
-
-# Scala
-*.class
-target/
-
-# direnv
-.direnv/
+.idea_modules/
+test_run_dir/
