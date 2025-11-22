@@ -49,6 +49,23 @@
     
     # Markdown 工具
     glow  # Markdown 预览工具
+    
+    # 编程语言和构建工具
+    # Rust
+    cargo
+    rustc
+    rust-analyzer
+    rustfmt
+    clippy
+    
+    # Python
+    python3
+    
+    # Scala/Java
+    jdk17
+    mill
+    coursier
+    metals
   ];
 
   # 环境变量

@@ -109,20 +109,19 @@
           echo ""
           echo "可用的环境类型:"
           echo "  通用开发:"
-          echo "    rust               - Rust 项目"
           echo "    cpp                - C++ 项目"
-          echo "    python, py         - Python 项目"
-          echo "    scala              - Scala 项目 (Coursier + Mill)"
           echo ""
           echo "  硬件开发:"
           echo "    sv, systemverilog  - SystemVerilog + Verilator"
           echo "    bsv                - Bluespec SystemVerilog"
           echo "    chisel             - Chisel 硬件设计"
           echo ""
+          echo "💡 提示: Rust/Python/Scala 已安装在主环境，无需模板"
+          echo ""
           echo "示例:"
-          echo "  nix-init rust my-app          # 创建 Rust 项目"
-          echo "  nix-init cpp                  # 在当前目录初始化 C++"
-          echo "  nix-init py ~/ml-project      # 在指定路径创建 Python 项目"
+          echo "  nix-init cpp my-app           # 创建 C++ 项目"
+          echo "  nix-init chisel               # 在当前目录初始化 Chisel"
+          echo "  nix-init sv ~/hardware        # 在指定路径创建 SystemVerilog 项目"
         end
         
         # 检查参数
@@ -138,12 +137,10 @@
         switch $env_type
           case sv
             set env_type systemverilog
-          case py
-            set env_type python
         end
         
         # 验证环境类型
-        if not contains $env_type rust cpp python scala systemverilog bsv chisel
+        if not contains $env_type cpp systemverilog bsv chisel
           echo "❌ 未知的环境类型: '$env_type'"
           echo ""
           _nix_init_help
@@ -227,22 +224,10 @@
         echo "📝 下一步:"
         
         switch $env_type
-          case rust
-            echo "   cargo init       - 初始化项目"
-            echo "   cargo build      - 构建项目"
-            echo "   cargo run        - 运行项目"
           case cpp
             echo "   cmake -B build   - 配置构建"
             echo "   cmake --build build - 构建项目"
             echo "   ./build/main     - 运行"
-          case python
-            echo "   uv venv          - 创建虚拟环境"
-            echo "   uv pip install   - 安装包"
-            echo "   python main.py   - 运行"
-          case scala
-            echo "   make compile   - 编译项目"
-            echo "   make test      - 运行测试"
-            echo "   make run       - 运行主类"
           case systemverilog
             echo "   make sim     - 构建并运行仿真"
             echo "   make trace   - 生成波形文件"
