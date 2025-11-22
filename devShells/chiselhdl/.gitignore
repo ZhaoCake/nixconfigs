@@ -13,6 +13,7 @@
 !*.md
 !openocd.cfg
 !flake.nix
+!.envrc
 build/
 
 # mill

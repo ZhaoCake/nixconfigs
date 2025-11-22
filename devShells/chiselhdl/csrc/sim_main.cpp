@@ -59,7 +59,7 @@ int main(int argc, char** argv) {
     // Reset sequence
     printf("Starting simulation...\n");
     top->reset = 1;
-    top->io_button = 0;
+    top->io_btn = 0;
     
     for (int i = 0; i < 5; i++) {
         tick();
@@ -74,10 +74,10 @@ int main(int argc, char** argv) {
     for (int cycle = 0; cycle < SIM_CYCLES; cycle++) {
         // Example: Toggle button every 20 cycles
         if (cycle == 20) {
-            top->io_button = 1;
+            top->io_btn = 1;
             printf("[Cycle %d] Button pressed\n", cycle);
         } else if (cycle == 25) {
-            top->io_button = 0;
+            top->io_btn = 0;
             printf("[Cycle %d] Button released\n", cycle);
         }
         
@@ -85,7 +85,7 @@ int main(int argc, char** argv) {
         
         // Sample output every 10 cycles
         if (cycle % 10 == 0) {
-            printf("[Cycle %d] LED output: 0x%02x\n", cycle, top->io_leds);
+            printf("[Cycle %d] LED output: 0x%02x\n", cycle, top->io_led);
         }
     }
     
