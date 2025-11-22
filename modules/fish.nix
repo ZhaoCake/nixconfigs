@@ -29,6 +29,11 @@
         fish_add_path --prepend "/nix/var/nix/profiles/default/bin"
       end
       
+      # 添加 Coursier bin 路径
+      if test -d "$HOME/.local/share/coursier/bin"
+        fish_add_path --append "$HOME/.local/share/coursier/bin"
+      end
+      
       # 设置 Nix 环境变量
       set -gx NIX_PROFILES "/nix/var/nix/profiles/default $HOME/.nix-profile"
       set -gx NIX_SSL_CERT_FILE "/etc/ssl/certs/ca-certificates.crt"
