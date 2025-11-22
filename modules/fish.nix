@@ -119,7 +119,8 @@
           echo "  硬件开发:"
           echo "    sv, systemverilog  - SystemVerilog + Verilator"
           echo "    bsv                - Bluespec SystemVerilog"
-          echo "    chisel             - Chisel 硬件设计"
+          echo "    chisel             - Chisel 硬件设计 (基础 GCD 示例)"
+          echo "    chiselhdl          - Chisel + Verilator (完整集成环境)"
           echo ""
           echo "💡 提示: Rust/Python/Scala 已安装在主环境，无需模板"
           echo ""
@@ -145,7 +146,7 @@
         end
         
         # 验证环境类型
-        if not contains $env_type cpp systemverilog bsv chisel
+        if not contains $env_type cpp systemverilog bsv chisel chiselhdl
           echo "❌ 未知的环境类型: '$env_type'"
           echo ""
           _nix_init_help
