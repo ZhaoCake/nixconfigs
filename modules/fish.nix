@@ -112,6 +112,7 @@
           echo "    rust               - Rust 项目"
           echo "    cpp                - C++ 项目"
           echo "    python, py         - Python 项目"
+          echo "    scala              - Scala 项目 (Coursier + Mill)"
           echo ""
           echo "  硬件开发:"
           echo "    sv, systemverilog  - SystemVerilog + Verilator"
@@ -142,7 +143,7 @@
         end
         
         # 验证环境类型
-        if not contains $env_type rust cpp python systemverilog bsv chisel
+        if not contains $env_type rust cpp python scala systemverilog bsv chisel
           echo "❌ 未知的环境类型: '$env_type'"
           echo ""
           _nix_init_help
@@ -238,6 +239,10 @@
             echo "   uv venv          - 创建虚拟环境"
             echo "   uv pip install   - 安装包"
             echo "   python main.py   - 运行"
+          case scala
+            echo "   make compile   - 编译项目"
+            echo "   make test      - 运行测试"
+            echo "   make run       - 运行主类"
           case systemverilog
             echo "   make sim     - 构建并运行仿真"
             echo "   make trace   - 生成波形文件"
