@@ -29,6 +29,11 @@
         fish_add_path --prepend "/nix/var/nix/profiles/default/bin"
       end
       
+      # 添加 Coursier bin 路径
+      if test -d "$HOME/.local/share/coursier/bin"
+        fish_add_path --append "$HOME/.local/share/coursier/bin"
+      end
+      
       # 设置 Nix 环境变量
       set -gx NIX_PROFILES "/nix/var/nix/profiles/default $HOME/.nix-profile"
       set -gx NIX_SSL_CERT_FILE "/etc/ssl/certs/ca-certificates.crt"
@@ -114,7 +119,8 @@
           echo "  硬件开发:"
           echo "    sv, systemverilog  - SystemVerilog + Verilator"
           echo "    bsv                - Bluespec SystemVerilog"
-          echo "    chisel             - Chisel 硬件设计"
+          echo "    chisel             - Chisel 硬件设计 (基础 GCD 示例)"
+          echo "    chiselhdl          - Chisel + Verilator (完整集成环境)"
           echo ""
           echo "💡 提示: Rust/Python/Scala 已安装在主环境，无需模板"
           echo ""
@@ -140,7 +146,7 @@
         end
         
         # 验证环境类型
-        if not contains $env_type cpp systemverilog bsv chisel
+        if not contains $env_type cpp systemverilog bsv chisel chiselhdl
           echo "❌ 未知的环境类型: '$env_type'"
           echo ""
           _nix_init_help
