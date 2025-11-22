@@ -4,12 +4,14 @@
 
 ## 🌟 特性
 
-- **Scala 3.3.4** - 现代化的 Scala 版本
-- **Coursier** - Scala 标准的工件获取和安装工具
+- **Scala 3.3.4** - 现代化的 Scala 版本（Mill 自动管理）
 - **Mill 0.12.7** - 快速简洁的构建工具
+- **Coursier** - 可选的 Scala 工具安装器（用于 REPL、scala-cli 等）
 - **Metals** - Scala 语言服务器，支持 IDE
 - **Nix Flake** - 可复现的开发环境
 - **direnv 支持** - 进入目录时自动激活环境
+
+> **注意**：Mill 已经内置 Scala 支持，会自动下载编译器和管理依赖。Coursier 仅用于安装可选工具（如 REPL、scala-cli 等）。
 
 ## 📁 项目结构
 
@@ -112,26 +114,23 @@ mill myproject.test
 mill myproject.ivyDepsTree
 ```
 
-### Coursier 命令
+### Coursier 命令（可选工具）
 
-Coursier (cs) 可用于管理 Scala 应用程序：
+Coursier (cs) 用于安装额外的 Scala 工具，**Mill 开发不需要**：
 
 ```bash
-# 安装 Scala 应用程序
-cs install scala           # Scala REPL
-cs install scalac          # Scala 编译器
-cs install scala-cli       # Scala CLI
-cs install sbt             # SBT 构建工具
-cs install ammonite        # Ammonite REPL
+# 安装可选工具
+cs install scala           # Scala REPL（交互式命令行）
+cs install scala-cli       # Scala CLI（快速脚本）
+cs install ammonite        # Ammonite REPL（增强版）
+cs install sbt             # SBT（如果需要 SBT 项目）
 
-# 无需安装直接启动应用
+# 无需安装直接启动
 cs launch scala-cli
 
-# 获取依赖
-cs fetch org.typelevel::cats-core:2.10.0
-
-# 设置完整的 Scala 环境
-cs setup
+# Mill 已经内置这些功能，通常不需要：
+# cs install scalac        # Mill 会自动管理编译器
+# cs fetch <dep>           # Mill 会自动下载依赖
 ```
 
 ## 📝 自定义项目
@@ -306,33 +305,44 @@ cs fetch org.typelevel::cats-core:2.10.0
 
 ## ⚙️ 技术细节
 
-### 为什么使用 Coursier？
+### Mill 如何管理 Scala？
 
-Coursier 是安装 Scala 应用程序和管理依赖的标准方式。它的优势：
-- 快速可靠
-- 正确处理依赖解析
-- 提供一致的方式安装 Scala 工具
-- 与所有构建工具良好集成
+Mill 会自动处理以下内容：
+- **Scala 编译器**：根据 `scalaVersion` 自动下载正确版本
+- **依赖管理**：内部使用 Coursier 解析和下载库
+- **编译缓存**：增量编译，只重新编译修改的文件
+- **测试运行**：集成测试框架支持
+
+**你只需要 Mill 就能进行完整的 Scala 开发！**
+
+### Coursier 的作用
+
+在本环境中，Coursier (cs) 是**可选的**，仅用于：
+- 安装独立的 Scala REPL（`cs install scala`）
+- 安装 scala-cli 用于快速脚本（`cs install scala-cli`）
+- 安装其他 Scala 工具（如 Ammonite）
+
+Mill 项目开发不需要手动安装 scala/scalac。
 
 ### Mill vs SBT
 
 本模板使用 Mill 的原因：
-- 更简单的语法（纯 Scala，无 DSL）
-- 更快的构建速度
-- 更好的缓存机制
-- 更容易理解和调试
+- **更简单的语法**：纯 Scala 代码，无 DSL
+- **更快的构建**：并行构建，更好的缓存
+- **更容易调试**：清晰的任务依赖关系
+- **更好的 IDE 支持**：原生 BSP 支持
 
-如果需要，你也可以轻松添加 SBT：`cs install sbt`
+如果需要 SBT 项目，可以用 `cs install sbt` 安装。
 
-### Nix + Coursier
+### Nix + Mill
 
 flake 提供：
-- 通过 Nix 提供 JDK（可复现）
-- 使用 Coursier 安装 Scala（标准方式）
-- 通过 Nix 提供 Mill（版本锁定）
-- Metals 用于 IDE 支持
+- **JDK 17** 通过 Nix（版本锁定，可复现）
+- **Mill** 通过 Nix（版本锁定为 0.12.7）
+- **Coursier** 通过 Nix（用于可选工具）
+- **Metals** 通过 Nix（IDE 支持）
 
-这为你提供了两全其美的方案：Nix 的可复现性 + Scala 的标准工具链。
+Mill 内部使用 Coursier 管理 Scala 和依赖，你无需手动配置。
 
 ## 🤝 贡献
 

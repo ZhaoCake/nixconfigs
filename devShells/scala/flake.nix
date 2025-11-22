@@ -32,11 +32,11 @@
           ];
 
           shellHook = ''
-            # Setup Coursier directory
+            # Setup Coursier directory (Mill uses Coursier internally)
             export COURSIER_CACHE="$HOME/.cache/coursier"
             export COURSIER_DIR="$HOME/.local/share/coursier"
             
-            # Ensure cs applications are in PATH
+            # Ensure cs applications are in PATH (for optional tools)
             export PATH="$COURSIER_DIR/bin:$PATH"
             
             # Set JAVA_HOME
@@ -46,38 +46,19 @@
             echo "🎯 Scala Development Environment"
             echo "=================================="
             echo "Java:      $(java -version 2>&1 | head -n 1)"
-            echo "Coursier:  $(cs version 2>&1 || echo 'installed')"
             echo "Mill:      $(mill --version 2>&1 || echo 'Mill available')"
+            echo "Coursier:  $(cs version 2>&1 || echo 'available')"
             echo ""
-            
-            # Check if Scala is installed via cs
-            if ! command -v scala &> /dev/null; then
-              echo "📦 Installing Scala via Coursier..."
-              echo ""
-              cs install scala
-              cs install scalac
-              echo ""
-            fi
-            
-            # Show installed Scala version if available
-            if command -v scala &> /dev/null; then
-              echo "Scala:     $(scala -version 2>&1 | grep -oP 'version \K[0-9.]+' || echo 'installed')"
-            fi
-            
+            echo "📝 快速开始:"
+            echo "  make compile     - 编译项目"
+            echo "  make test        - 运行测试"
+            echo "  make run         - 运行主类"
+            echo "  make bsp         - 设置 IDE 集成"
             echo ""
-            echo "📝 Quick Start:"
-            echo "  cs install scala       - Install Scala (if not already)"
-            echo "  cs install scalac      - Install Scala compiler"
-            echo "  cs install scala-cli   - Install Scala CLI"
-            echo "  mill _.compile         - Compile all modules"
-            echo "  mill _.test            - Run all tests"
-            echo "  mill _.run             - Run main class"
-            echo ""
-            echo "📚 Coursier commands:"
-            echo "  cs install <app>       - Install Scala applications"
-            echo "  cs launch <app>        - Launch Scala applications"
-            echo "  cs fetch <dep>         - Fetch dependencies"
-            echo "  cs setup               - Setup Scala environment"
+            echo "💡 提示:"
+            echo "  Mill 会自动管理 Scala 编译器和依赖"
+            echo "  如需 REPL: cs install scala"
+            echo "  如需 scala-cli: cs install scala-cli"
             echo ""
           '';
         };
