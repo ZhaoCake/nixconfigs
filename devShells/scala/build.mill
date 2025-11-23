@@ -1,0 +1,24 @@
+package build
+import mill.*, scalalib.*, scalafmt.*
+
+object app extends ScalaModule with ScalafmtModule {
+  def scalaVersion = "3.3.4" // LTS version
+
+  def scalacOptions = Seq(
+    "-deprecation",
+    "-feature",
+    "-unchecked"
+  )
+
+  // Add dependencies here
+  def mvnDeps = Seq(
+    // mvn"com.lihaoyi::os-lib:0.9.3",
+    // mvn"com.lihaoyi::upickle:3.1.4"
+  )
+
+  object test extends ScalaTests with TestModule.Munit with ScalafmtModule {
+    def mvnDeps = Seq(
+      mvn"org.scalameta::munit:0.7.29"
+    )
+  }
+}
