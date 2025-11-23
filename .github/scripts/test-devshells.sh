@@ -74,12 +74,12 @@ test_devshell() {
 
 # 测试所有 devShells
 ENV_LIST=(
-    "rust"
     "cpp"
-    "python"
     "systemverilog"
     "bsv"
     "chisel"
+    "chiselhdl"
+    "scala"
 )
 
 echo "Found ${#ENV_LIST[@]} devShell environments to test"

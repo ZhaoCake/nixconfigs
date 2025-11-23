@@ -115,6 +115,7 @@
           echo "可用的环境类型:"
           echo "  通用开发:"
           echo "    cpp                - C++ 项目"
+          echo "    scala              - 纯 Scala 项目"
           echo ""
           echo "  硬件开发:"
           echo "    sv, systemverilog  - SystemVerilog + Verilator"
@@ -122,10 +123,11 @@
           echo "    chisel             - Chisel 硬件设计 (基础 GCD 示例)"
           echo "    chiselhdl          - Chisel + Verilator (完整集成环境)"
           echo ""
-          echo "💡 提示: Rust/Python/Scala 已安装在主环境，无需模板"
+          echo "💡 提示: Rust/Python 已安装在主环境，无需模板"
           echo ""
           echo "示例:"
           echo "  nix-init cpp my-app           # 创建 C++ 项目"
+          echo "  nix-init scala my-scala-app   # 创建 Scala 项目"
           echo "  nix-init chisel               # 在当前目录初始化 Chisel"
           echo "  nix-init sv ~/hardware        # 在指定路径创建 SystemVerilog 项目"
         end
@@ -146,7 +148,7 @@
         end
         
         # 验证环境类型
-        if not contains $env_type cpp systemverilog bsv chisel chiselhdl
+        if not contains $env_type cpp systemverilog bsv chisel chiselhdl scala
           echo "❌ 未知的环境类型: '$env_type'"
           echo ""
           _nix_init_help
@@ -234,6 +236,9 @@
             echo "   cmake -B build   - 配置构建"
             echo "   cmake --build build - 构建项目"
             echo "   ./build/main     - 运行"
+          case scala
+            echo "   make run       - 运行应用"
+            echo "   make test      - 运行测试"
           case systemverilog
             echo "   make sim     - 构建并运行仿真"
             echo "   make trace   - 生成波形文件"

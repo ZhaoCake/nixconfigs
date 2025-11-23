@@ -49,9 +49,6 @@
     # 主题配置
     colorschemes.gruvbox = {
       enable = true;
-      settings = {
-        transparent_mode = true;  # 透明背景（可选）
-      };
     };
     
     # 插件配置
