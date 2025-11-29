@@ -37,6 +37,7 @@
     fastfetch  # 系统信息显示工具
     openssh    # SSH 客户端
     less       # 分页器（git log 等命令需要）
+    inetutils  # ifconfig, hostname, ping 等网络工具
     
     # 开发工具
     ripgrep
