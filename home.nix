@@ -15,7 +15,7 @@
   imports = [
     ./modules/fish.nix
     ./modules/starship.nix
-    ./modules/nixvim.nix
+    ./modules/nixvim.nix     # NixVim 编辑器配置
     ./modules/fastfetch.nix   # 系统信息显示
     ./modules/tmux.nix        # 终端复用器
     # ./modules/alacritty.nix   # 终端模拟器配置
@@ -67,7 +67,7 @@
     jdk17
     mill
     coursier
-    metals
+    # metals 
   ];
 
   # 环境变量

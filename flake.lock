@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "astronvim_template": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1749212322,
+        "narHash": "sha256-nxPdSG4TMpNwB8d4s3Iw/uULZgx04HBYf+QSwZXQyH8=",
+        "owner": "AstroNvim",
+        "repo": "template",
+        "rev": "89ebfd35d6415634d82cc6f2991bf66c842872d0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AstroNvim",
+        "repo": "template",
+        "type": "github"
+      }
+    },
     "flake-parts": {
       "inputs": {
         "nixpkgs-lib": [
@@ -81,6 +97,7 @@
     },
     "root": {
       "inputs": {
+        "astronvim_template": "astronvim_template",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
         "nixvim": "nixvim"
