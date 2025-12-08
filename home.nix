@@ -15,7 +15,8 @@
   imports = [
     ./modules/fish.nix
     ./modules/starship.nix
-    ./modules/nixvim.nix
+    # ./modules/nixvim.nix      # 启用 Nixvim
+    # ./modules/astronvim.nix   # 禁用 AstroNvim
     ./modules/fastfetch.nix   # 系统信息显示
     ./modules/tmux.nix        # 终端复用器
     # ./modules/alacritty.nix   # 终端模拟器配置
@@ -37,12 +38,15 @@
     fastfetch  # 系统信息显示工具
     openssh    # SSH 客户端
     less       # 分页器（git log 等命令需要）
+    inetutils  # ifconfig, hostname, ping 等网络工具
     
     # 开发工具
+    neovim
     ripgrep
     fd
     bat
     eza  # exa 已更名为 eza
+    gnumake  # GNU Make 构建工具
     
     # 格式化工具
     nixpkgs-fmt  # Nix 代码格式化
@@ -65,7 +69,7 @@
     jdk17
     mill
     coursier
-    metals
+    # metals 
   ];
 
   # 环境变量
