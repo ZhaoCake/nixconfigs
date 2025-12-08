@@ -15,7 +15,8 @@
   imports = [
     ./modules/fish.nix
     ./modules/starship.nix
-    ./modules/nixvim.nix     # NixVim 编辑器配置
+    # ./modules/nixvim.nix      # 启用 Nixvim
+    # ./modules/astronvim.nix   # 禁用 AstroNvim
     ./modules/fastfetch.nix   # 系统信息显示
     ./modules/tmux.nix        # 终端复用器
     # ./modules/alacritty.nix   # 终端模拟器配置
@@ -40,6 +41,7 @@
     inetutils  # ifconfig, hostname, ping 等网络工具
     
     # 开发工具
+    neovim
     ripgrep
     fd
     bat
