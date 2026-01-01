@@ -19,6 +19,7 @@
     # ./modules/astronvim.nix   # 禁用 AstroNvim
     ./modules/fastfetch.nix   # 系统信息显示
     ./modules/tmux.nix        # 终端复用器
+    ./modules/vim.nix         # Vim 配置
     # ./modules/alacritty.nix   # 终端模拟器配置
     
     # 所有开发环境已移至 devShells/ 目录，使用 direnv 按需激活
@@ -37,13 +38,13 @@
     btop
     unzip
     zip
+    fzf        # 模糊查找工具
     fastfetch  # 系统信息显示工具
     openssh    # SSH 客户端
     less       # 分页器（git log 等命令需要）
     inetutils  # ifconfig, hostname, ping 等网络工具
     
     # 开发工具
-    neovim
     ripgrep
     fd
     bat
@@ -64,21 +65,23 @@
     rustfmt
     clippy
     
+    # C/C++
+    gcc
+    clang-tools  # 包含 clangd
+    cmake
+
     # Python
     python3
     uv
     
-    # Scala/Java
-    jdk17
-    mill
-    coursier
-    # metals 
+    # Node.js (for CoC)
+    nodejs
   ];
 
   # 环境变量
   home.sessionVariables = {
-    EDITOR = "nvim";
-    VISUAL = "nvim";
+    EDITOR = "vim";
+    VISUAL = "vim";
   };
   
   # direnv 配置（自动加载项目环境）
