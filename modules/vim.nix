@@ -1,9 +1,20 @@
 { pkgs, ... }:
 
 {
+  # 安装 Verible (SystemVerilog LSP) 和 Ctags
+  home.packages = with pkgs; [
+    verible
+    universal-ctags
+  ];
+
   # CoC 配置文件
   home.file.".vim/coc-settings.json".text = builtins.toJSON {
     "languageserver" = {
+      "sv" = {
+        "command" = "verible-verilog-ls";
+        "filetypes" = ["systemverilog" "verilog"];
+        "rootPatterns" = [".git" "verible.filelist"];
+      };
       "rust" = {
         "command" = "rust-analyzer";
         "filetypes" = ["rust"];
@@ -36,6 +47,16 @@
       # 主题
       everforest
       vim-airline-themes
+      
+      # 图标
+      vim-devicons
+      
+      # Ctags 支持
+      vim-gutentags
+      tagbar
+      
+      # 快捷键提示
+      vim-which-key
     ];
 
     # 基础设置
@@ -51,6 +72,9 @@
 
     # Vimscript 配置
     extraConfig = ''
+      " 设置 Leader 键为空格
+      let mapleader = " "
+
       " 开启语法高亮
       syntax on
       
@@ -73,6 +97,10 @@
       
       " 总是显示状态栏
       set laststatus=2
+
+      " 高亮当前行和列
+      set cursorline
+      set cursorcolumn
       
       " 编码设置
       set encoding=utf-8
@@ -87,8 +115,8 @@
       " 设置背景为深色
       set background=dark
       
-      " Everforest 配置 (Soft 模式更护眼)
-      let g:everforest_background = 'soft'
+      " Everforest 配置 (Hard 模式对比度更高)
+      let g:everforest_background = 'hard'
       let g:everforest_better_performance = 1
       
       colorscheme everforest
@@ -96,6 +124,27 @@
       " Airline 主题配置
       let g:airline_theme = 'everforest'
       let g:airline_powerline_fonts = 1
+      
+      " Airline Tabline 配置 (顶部 Buffer 栏)
+      let g:airline#extensions#tabline#enabled = 1
+      let g:airline#extensions#tabline#formatter = 'unique_tail'
+      let g:airline#extensions#tabline#buffer_nr_show = 1
+
+      " --- Tagbar 配置 ---
+      " <leader>t 切换 Tagbar (代码大纲)
+      nnoremap <leader>t :TagbarToggle<CR>
+      
+      " --- Gutentags 配置 ---
+      " 自动管理 tags 文件
+      let g:gutentags_project_root = ['.root', '.svn', '.git', '.hg', '.project']
+      let g:gutentags_ctags_tagfile = '.tags'
+      
+      " 将 tags 文件放在统一的缓存目录，避免污染项目目录
+      let s:vim_tags = expand('~/.cache/tags')
+      let g:gutentags_cache_dir = s:vim_tags
+      if !isdirectory(s:vim_tags)
+         silent! call mkdir(s:vim_tags, 'p')
+      endif
 
       " --- NERDTree 配置 ---
       " 使用 <leader>e 切换侧边栏
@@ -165,6 +214,30 @@
       " 格式化代码
       xmap <leader>f  <Plug>(coc-format-selected)
       nmap <leader>f  <Plug>(coc-format-selected)
+      
+      " --- WhichKey 配置 ---
+      " 设置超时时间 (毫秒)
+      set timeoutlen=500
+      
+      " 注册 Leader 键
+      nnoremap <silent> <leader> :WhichKey '<Space>'<CR>
+      vnoremap <silent> <leader> :WhichKey '<Space>'<CR>
+      
+      " 定义菜单字典
+      let g:which_key_map =  {}
+      
+      " 注册现有快捷键的描述
+      let g:which_key_map.e = 'Explorer'
+      let g:which_key_map.b = 'Buffers'
+      let g:which_key_map.t = 'Tagbar'
+      let g:which_key_map.f = 'Format'
+      
+      " 嵌套菜单
+      let g:which_key_map.r = { 'name' : '+refactor' }
+      let g:which_key_map.r.n = 'Rename'
+      
+      " 注册字典
+      call which_key#register('<Space>', "g:which_key_map")
     '';
   };
 }
