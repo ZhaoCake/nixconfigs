@@ -35,6 +35,8 @@
     tree
     htop
     btop
+    unzip
+    zip
     fastfetch  # 系统信息显示工具
     openssh    # SSH 客户端
     less       # 分页器（git log 等命令需要）
