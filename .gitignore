@@ -16,3 +16,4 @@ nix.conf
 
 # Nix 临时文件
 .direnv/
+flake.lock
