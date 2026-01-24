@@ -20,6 +20,7 @@
     ./modules/fastfetch.nix   # 系统信息显示
     ./modules/tmux.nix        # 终端复用器
     ./modules/vim.nix         # Vim 配置
+    ./modules/uv.nix          # uv 配置 (Python)
     # ./modules/alacritty.nix   # 终端模拟器配置
     
     # 所有开发环境已移至 devShells/ 目录，使用 direnv 按需激活
@@ -71,7 +72,7 @@
     cmake
 
     # Python
-    python3
+    # python3
     uv
     
     # Node.js (for CoC)
