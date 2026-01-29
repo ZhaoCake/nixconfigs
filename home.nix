@@ -15,11 +15,9 @@
   imports = [
     ./modules/fish.nix
     ./modules/starship.nix
-    # ./modules/nixvim.nix      # 启用 Nixvim
-    # ./modules/astronvim.nix   # 禁用 AstroNvim
     ./modules/fastfetch.nix   # 系统信息显示
     ./modules/tmux.nix        # 终端复用器
-    ./modules/vim.nix         # Vim 配置
+    ./modules/vim.nix         # Vim 配置 (Nixvim)
     ./modules/uv.nix          # uv 配置 (Python)
     # ./modules/alacritty.nix   # 终端模拟器配置
     
@@ -44,6 +42,17 @@
     openssh    # SSH 客户端
     less       # 分页器（git log 等命令需要）
     inetutils  # ifconfig, hostname, ping 等网络工具
+    wl-clipboard # Wayland 剪贴板工具
+    xclip      # X11 剪贴板工具
+    
+    # WSL 增强工具
+    wslu       # wslview 等工具 (调用 Windows 浏览器)
+    dos2unix   # 转换 Windows/Linux 换行符
+    
+    # 效率工具
+    jq         # JSON 处理
+    tldr       # 常用命令示例 (比 man 简单)
+    ncdu       # 磁盘占用分析
     
     # 开发工具
     ripgrep
@@ -79,16 +88,32 @@
     nodejs
   ];
 
-  # 环境变量
-  home.sessionVariables = {
-    EDITOR = "vim";
-    VISUAL = "vim";
-  };
+  # 环境变量由 Nixvim 的 defaultEditor 选项自动设置
   
   # direnv 配置（自动加载项目环境）
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
+  };
+
+  # Zoxide: 智能目录跳转 (替代 cd)
+  programs.zoxide = {
+    enable = true;
+    enableFishIntegration = true;
+    options = [ "--cmd cd" ]; # 替换 cd 命令
+  };
+
+  # Lazygit: 终端 Git UI
+  programs.lazygit = {
+    enable = true;
+    settings = {
+      gui.theme = {
+        lightTheme = false;
+        activeBorderColor = ["green" "bold"];
+        inactiveBorderColor = ["white"];
+        selectedLineBgColor = ["reverse"];
+      };
+    };
   };
 
     # Git 基础配置（可以根据需要调整）

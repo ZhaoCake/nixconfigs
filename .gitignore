@@ -13,6 +13,8 @@ nix.conf
 *.swo
 *~
 .DS_Store
+.metals/
+.vscode/
 
 # Nix 临时文件
 .direnv/

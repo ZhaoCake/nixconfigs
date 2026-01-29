@@ -7,60 +7,14 @@
     universal-ctags
   ];
 
-  # CoC 配置文件
-  home.file.".vim/coc-settings.json".text = builtins.toJSON {
-    "languageserver" = {
-      "sv" = {
-        "command" = "verible-verilog-ls";
-        "filetypes" = ["systemverilog" "verilog"];
-        "rootPatterns" = [".git" "verible.filelist"];
-      };
-      "rust" = {
-        "command" = "rust-analyzer";
-        "filetypes" = ["rust"];
-        "rootPatterns" = ["Cargo.toml"];
-      };
-      "clangd" = {
-        "command" = "clangd";
-        "args" = ["--background-index"];
-        "rootPatterns" = ["compile_commands.json" ".vim/" ".git/" ".hg/"];
-        "filetypes" = ["c" "cpp" "objc" "objcpp"];
-      };
-    };
-    "suggest.noselect" = true;
-    "suggest.enablePreview" = true;
-  };
-
-  programs.vim = {
+  programs.nixvim = {
     enable = true;
     defaultEditor = true;
-    
-    # 基础插件
-    plugins = with pkgs.vimPlugins; [
-      vim-airline
-      vim-nix
-      vim-lastplace
-      coc-nvim
-      nerdtree
-      fzf-vim
-      
-      # 主题
-      everforest
-      vim-airline-themes
-      
-      # 图标
-      vim-devicons
-      
-      # Ctags 支持
-      vim-gutentags
-      tagbar
-      
-      # 快捷键提示
-      vim-which-key
-    ];
+    viAlias = true;
+    vimAlias = true;
 
-    # 基础设置
-    settings = {
+    # 基础设置 (相当于 set ...)
+    opts = {
       number = true;
       relativenumber = true;
       tabstop = 4;
@@ -68,111 +22,158 @@
       expandtab = true;
       ignorecase = true;
       smartcase = true;
+      mouse = "a";
+      clipboard = "unnamedplus";
+      hlsearch = true;
+      incsearch = true;
+      showcmd = true;
+      autoindent = true;
+      smartindent = true;
+      laststatus = 2;
+      cursorline = true;
+      cursorcolumn = true;
+      encoding = "utf-8";
+      fileencoding = "utf-8";
+      termguicolors = true;
+      wildmenu = true;
+      wildmode = "longest:full,full";
+      timeoutlen = 500;
     };
 
-    # Vimscript 配置
-    extraConfig = ''
-      " 设置 Leader 键为空格
-      let mapleader = " "
+    # 全局变量 (相当于 let g:...)
+    globals = {
+      mapleader = " ";
+      
+      # Airline 扩展配置 (使用 # 符号的必须在 globals 中)
+      "airline#extensions#tabline#enabled" = 1;
+      "airline#extensions#tabline#formatter" = "unique_tail";
+      "airline#extensions#tabline#buffer_nr_show" = 1;
 
-      " 开启语法高亮
-      syntax on
+      # Gutentags 配置
+      gutentags_project_root = [".root" ".svn" ".git" ".hg" ".project"];
+      gutentags_ctags_tagfile = ".tags";
       
-      " 鼠标支持
-      set mouse=a
-      
-      " 剪贴板共享
-      set clipboard=unnamedplus
-      
-      " 搜索高亮
-      set hlsearch
-      set incsearch
-      
-      " 状态栏显示命令
-      set showcmd
-      
-      " 自动缩进
-      set autoindent
-      set smartindent
-      
-      " 总是显示状态栏
-      set laststatus=2
+      # NERDTree 配置
+      NERDTreeQuitOnOpen = 1;
+    };
 
-      " 高亮当前行和列
-      set cursorline
-      set cursorcolumn
-      
-      " 编码设置
-      set encoding=utf-8
-      set fileencoding=utf-8
-      
-      " --- 主题配置 (Everforest) ---
-      " 开启真彩色支持
-      if (has("termguicolors"))
-        set termguicolors
-      endif
-      
-      " 设置背景为深色
-      set background=dark
-      
-      " Everforest 配置 (Hard 模式对比度更高)
-      let g:everforest_background = 'hard'
-      let g:everforest_better_performance = 1
-      
-      colorscheme everforest
-      
-      " Airline 主题配置
-      let g:airline_theme = 'everforest'
-      let g:airline_powerline_fonts = 1
-      
-      " Airline Tabline 配置 (顶部 Buffer 栏)
-      let g:airline#extensions#tabline#enabled = 1
-      let g:airline#extensions#tabline#formatter = 'unique_tail'
-      let g:airline#extensions#tabline#buffer_nr_show = 1
+    # Everforest 主题配置
+    colorschemes.everforest = {
+      enable = true;
+      settings = {
+        background = "hard";
+        better_performance = 1;
+      };
+    };
 
-      " --- Tagbar 配置 ---
-      " <leader>t 切换 Tagbar (代码大纲)
-      nnoremap <leader>t :TagbarToggle<CR>
+    # 插件配置
+    plugins = {
+      # 状态栏
+      airline = {
+        enable = true;
+        settings = {
+          theme = "everforest";
+          powerline_fonts = 1;
+        };
+      };
       
-      " --- Gutentags 配置 ---
-      " 自动管理 tags 文件
-      let g:gutentags_project_root = ['.root', '.svn', '.git', '.hg', '.project']
-      let g:gutentags_ctags_tagfile = '.tags'
+      # Nix 语言支持
+      nix.enable = true;
       
-      " 将 tags 文件放在统一的缓存目录，避免污染项目目录
+      # 自动补全和 LSP (CoC)
+      coc = {
+        enable = true;
+        settings = {
+          "languageserver" = {
+            "sv" = {
+              "command" = "verible-verilog-ls";
+              "filetypes" = ["systemverilog" "verilog"];
+              "rootPatterns" = [".git" "verible.filelist"];
+            };
+            "rust" = {
+              "command" = "rust-analyzer";
+              "filetypes" = ["rust"];
+              "rootPatterns" = ["Cargo.toml"];
+            };
+            "clangd" = {
+              "command" = "clangd";
+              "args" = ["--background-index"];
+              "rootPatterns" = ["compile_commands.json" ".vim/" ".git/" ".hg/"];
+              "filetypes" = ["c" "cpp" "objc" "objcpp"];
+            };
+          };
+          "suggest.noselect" = true;
+          "suggest.enablePreview" = true;
+        };
+      };
+
+      # 文件树
+      nerdtree.enable = true;
+      
+      # 模糊搜索 (FZF)
+      fzf-vim.enable = true;
+      
+      # 代码大纲
+      tagbar.enable = true;
+      
+      # 图标支持 (替代 vim-devicons)
+      web-devicons.enable = true;
+      
+      # 记住上次编辑位置
+      lastplace.enable = true;
+
+      # 快捷键提示 (WhichKey)
+      which-key = {
+        enable = true;
+        registrations = {
+           "<leader>e" = "Explorer";
+           "<leader>b" = "Buffers";
+           "<leader>t" = "Tagbar";
+           "<leader>f" = "Format";
+           "<leader>r" = { name = "+refactor"; };
+           "<leader>rn" = "Rename";
+        };
+      };
+    };
+
+    # 额外插件 (Nixvim 内置模块未覆盖的)
+    extraPlugins = with pkgs.vimPlugins; [
+      vim-gutentags
+      vim-airline-themes
+    ];
+
+    # 快捷键映射
+    keymaps = [
+      { mode = "n"; key = "<leader>t"; action = ":TagbarToggle<CR>"; }
+      { mode = "n"; key = "<leader>e"; action = ":NERDTreeToggle<CR>"; }
+      { mode = "n"; key = "<C-p>"; action = ":Files<CR>"; }
+      { mode = "n"; key = "<leader>b"; action = ":Buffers<CR>"; }
+      
+      # CoC 快捷键
+      { mode = "n"; key = "gd"; action = "<Plug>(coc-definition)"; options = { silent = true; }; }
+      { mode = "n"; key = "gy"; action = "<Plug>(coc-type-definition)"; options = { silent = true; }; }
+      { mode = "n"; key = "gi"; action = "<Plug>(coc-implementation)"; options = { silent = true; }; }
+      { mode = "n"; key = "gr"; action = "<Plug>(coc-references)"; options = { silent = true; }; }
+      { mode = "n"; key = "<leader>rn"; action = "<Plug>(coc-rename)"; }
+      
+      # 格式化
+      { mode = "x"; key = "<leader>f"; action = "<Plug>(coc-format-selected)"; }
+      { mode = "n"; key = "<leader>f"; action = "<Plug>(coc-format-selected)"; }
+      
+      # 查看文档
+      { mode = "n"; key = "K"; action = ":call ShowDocumentation()<CR>"; options = { silent = true; }; }
+    ];
+
+    # 额外的 Vimscript 配置 (用于复杂逻辑)
+    extraConfigVim = ''
+      " --- Gutentags 缓存目录配置 ---
       let s:vim_tags = expand('~/.cache/tags')
       let g:gutentags_cache_dir = s:vim_tags
       if !isdirectory(s:vim_tags)
          silent! call mkdir(s:vim_tags, 'p')
       endif
 
-      " --- NERDTree 配置 ---
-      " 使用 <leader>e 切换侧边栏
-      nnoremap <leader>e :NERDTreeToggle<CR>
-      " 打开文件时自动关闭 NERDTree
-      let NERDTreeQuitOnOpen = 1
-
-      " --- 命令行补全配置 (Wildmenu) ---
-      " 启用命令行菜单
-      set wildmenu
-      " 补全模式：最长匹配 -> 完整列表
-      set wildmode=longest:full,full
-      " 使用垂直弹出菜单 (Vim 8.2+)
-      if has("patch-8.2.1978")
-        set wildoptions=pum
-      endif
-
-      " --- FZF 配置 ---
-      " <C-p> 查找文件
-      nnoremap <C-p> :Files<CR>
-      " <leader>b 查找缓冲区
-      nnoremap <leader>b :Buffers<CR>
-
-      " --- CoC.nvim 配置 ---
-      " 默认不自动选中第一个补全项
-      set completeopt=menuone,noinsert,noselect
-      
-      " Tab 键补全
+      " --- CoC Tab 补全逻辑 ---
       inoremap <silent><expr> <TAB>
             \ coc#pum#visible() ? coc#pum#next(1) :
             \ CheckBackspace() ? "\<Tab>" :
@@ -184,22 +185,11 @@
         return !col || getline('.')[col - 1]  =~# '\s'
       endfunction
 
-      " 回车确认补全
+      " 回车确认
       inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
                                     \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
-      " gd 跳转定义
-      nmap <silent> gd <Plug>(coc-definition)
-      " gy 跳转类型定义
-      nmap <silent> gy <Plug>(coc-type-definition)
-      " gi 跳转实现
-      nmap <silent> gi <Plug>(coc-implementation)
-      " gr 查找引用
-      nmap <silent> gr <Plug>(coc-references)
-
-      " K 显示文档
-      nnoremap <silent> K :call ShowDocumentation()<CR>
-
+      " --- 文档查看函数 ---
       function! ShowDocumentation()
         if CocAction('hasProvider', 'hover')
           call CocActionAsync('doHover')
@@ -207,37 +197,6 @@
           call feedkeys('K', 'in')
         endif
       endfunction
-
-      " 重命名
-      nmap <leader>rn <Plug>(coc-rename)
-      
-      " 格式化代码
-      xmap <leader>f  <Plug>(coc-format-selected)
-      nmap <leader>f  <Plug>(coc-format-selected)
-      
-      " --- WhichKey 配置 ---
-      " 设置超时时间 (毫秒)
-      set timeoutlen=500
-      
-      " 注册 Leader 键
-      nnoremap <silent> <leader> :WhichKey '<Space>'<CR>
-      vnoremap <silent> <leader> :WhichKey '<Space>'<CR>
-      
-      " 定义菜单字典
-      let g:which_key_map =  {}
-      
-      " 注册现有快捷键的描述
-      let g:which_key_map.e = 'Explorer'
-      let g:which_key_map.b = 'Buffers'
-      let g:which_key_map.t = 'Tagbar'
-      let g:which_key_map.f = 'Format'
-      
-      " 嵌套菜单
-      let g:which_key_map.r = { 'name' : '+refactor' }
-      let g:which_key_map.r.n = 'Rename'
-      
-      " 注册字典
-      call which_key#register('<Space>', "g:which_key_map")
     '';
   };
 }
