@@ -51,7 +51,6 @@
     
     # 效率工具
     jq         # JSON 处理
-    tldr       # 常用命令示例 (比 man 简单)
     ncdu       # 磁盘占用分析
     
     # 开发工具
@@ -94,13 +93,6 @@
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
-  };
-
-  # Zoxide: 智能目录跳转 (替代 cd)
-  programs.zoxide = {
-    enable = true;
-    enableFishIntegration = true;
-    options = [ "--cmd cd" ]; # 替换 cd 命令
   };
 
   # Lazygit: 终端 Git UI
