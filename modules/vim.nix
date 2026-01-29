@@ -107,9 +107,6 @@
         };
       };
 
-      # 文件树
-      nerdtree.enable = true;
-      
       # 模糊搜索 (FZF)
       fzf-vim.enable = true;
       
@@ -138,6 +135,7 @@
 
     # 额外插件 (Nixvim 内置模块未覆盖的)
     extraPlugins = with pkgs.vimPlugins; [
+      nerdtree          # 文件树
       vim-gutentags
       vim-airline-themes
     ];
