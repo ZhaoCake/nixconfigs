@@ -108,6 +108,27 @@
     };
   };
 
+  # Zoxide: 智能目录跳转 (替代 cd)
+  programs.zoxide = {
+    enable = true;
+    enableFishIntegration = true;
+    # options = [ "--cmd cd" ]; # 如果你想用 z 替代 cd，可以取消注释这行
+  };
+
+  # Tealdeer: tldr 的 Rust 实现 (更快的命令手册)
+  programs.tealdeer = {
+    enable = true;
+    settings = {
+      display = {
+        use_pager = true;
+        compact = false;
+      };
+      updates = {
+        auto_update = true;
+      };
+    };
+  };
+
     # Git 基础配置（可以根据需要调整）
   programs.git = {
     enable = true;
