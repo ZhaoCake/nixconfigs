@@ -73,6 +73,7 @@ nix develop  # 使用项目的 flake.nix
 | Rust | `rust/` | rustc, cargo, clippy, rust-analyzer |
 | C++ | `cpp/` | clang, gcc, cmake, clangd, gdb |
 | Python | `python/` | python3.12, uv, pip, pytest, black, ruff |
+| Haskell | `haskell/` | ghc, cabal-install, haskell-language-server |
 
 ### 硬件开发
 

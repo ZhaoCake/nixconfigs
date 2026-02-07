@@ -19,6 +19,7 @@
     ./modules/tmux.nix        # 终端复用器
     ./modules/vim.nix         # Vim 配置 (Nixvim)
     ./modules/uv.nix          # uv 配置 (Python)
+    ./modules/codex.nix       # Codex 配置
     # ./modules/alacritty.nix   # 终端模拟器配置
     
     # 所有开发环境已移至 devShells/ 目录，使用 direnv 按需激活
@@ -51,7 +52,6 @@
     
     # 效率工具
     jq         # JSON 处理
-    tldr       # 常用命令示例 (比 man 简单)
     ncdu       # 磁盘占用分析
     
     # 开发工具
@@ -96,13 +96,6 @@
     nix-direnv.enable = true;
   };
 
-  # Zoxide: 智能目录跳转 (替代 cd)
-  programs.zoxide = {
-    enable = true;
-    enableFishIntegration = true;
-    options = [ "--cmd cd" ]; # 替换 cd 命令
-  };
-
   # Lazygit: 终端 Git UI
   programs.lazygit = {
     enable = true;
@@ -112,6 +105,27 @@
         activeBorderColor = ["green" "bold"];
         inactiveBorderColor = ["white"];
         selectedLineBgColor = ["reverse"];
+      };
+    };
+  };
+
+  # Zoxide: 智能目录跳转 (替代 cd)
+  programs.zoxide = {
+    enable = true;
+    enableFishIntegration = true;
+    # options = [ "--cmd cd" ]; # 如果你想用 z 替代 cd，可以取消注释这行
+  };
+
+  # Tealdeer: tldr 的 Rust 实现 (更快的命令手册)
+  programs.tealdeer = {
+    enable = true;
+    settings = {
+      display = {
+        use_pager = true;
+        compact = false;
+      };
+      updates = {
+        auto_update = true;
       };
     };
   };

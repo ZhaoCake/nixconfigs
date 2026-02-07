@@ -1,0 +1,7 @@
+.direnv/
+result
+result-*
+/dist-newstyle/
+/.ghc.environment.*
+/.stack-work/
+/.vscode/

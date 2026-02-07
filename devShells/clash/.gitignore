@@ -1,0 +1,32 @@
+# Nix/Direnv
+.direnv/
+.envrc.private
+result
+result-*
+
+# Haskell/Cabal
+dist-newstyle/
+.ghc.environment.*
+*.cabal.lock
+# Cabal build artifacts if not using new-build (rare nowadays but good to have)
+*.o
+*.hi
+*.chi
+*.chs.h
+*.dyn_o
+*.dyn_hi
+
+# Clash generated HDL
+verilog/
+vhdl/
+systemverilog/
+
+# Editor/IDE
+.vscode/
+*.swp
+*~
+.hie/
+
+# OS specific
+.DS_Store
+Thumbs.db

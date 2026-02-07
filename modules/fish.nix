@@ -104,7 +104,7 @@
         fastfetch --config ~/.config/fastfetch/config-minimal.jsonc
       '';
       
-      # 创建硬件开发项目（SystemVerilog/BSV/Chisel）
+      # 创建硬件开发项目（SystemVerilog/BSV/Chisel/Clash）
       nix-init = ''
         set -l DEVSHELLS_DIR "$HOME/.nixconfigs/devShells"
         
@@ -116,12 +116,13 @@
           echo "  通用开发:"
           echo "    cpp                - C++ 项目"
           echo "    scala              - 纯 Scala 项目"
+          echo "    haskell            - Haskell 项目"
           echo ""
           echo "  硬件开发:"
           echo "    sv, systemverilog  - SystemVerilog + Verilator"
           echo "    bsv                - Bluespec SystemVerilog"
-          echo "    chisel             - Chisel 硬件设计 (基础 GCD 示例)"
-          echo "    chiselhdl          - Chisel + Verilator (完整集成环境)"
+          echo "    chisel             - Chisel + Verilator (完整集成环境)"
+          echo "    clash              - Clash (Haskell to HDL)"
           echo ""
           echo "💡 提示: Rust/Python 已安装在主环境，无需模板"
           echo ""
@@ -145,10 +146,12 @@
         switch $env_type
           case sv
             set env_type systemverilog
+          case chisel
+            set env_type chiselhdl
         end
         
         # 验证环境类型
-        if not contains $env_type cpp systemverilog bsv chisel chiselhdl scala
+        if not contains $env_type cpp systemverilog bsv chiselhdl scala haskell clash
           echo "❌ 未知的环境类型: '$env_type'"
           echo ""
           _nix_init_help
@@ -233,22 +236,28 @@
         
         switch $env_type
           case cpp
-            echo "   cmake -B build   - 配置构建"
+            echo "   cmake -B build      - 配置构建"
             echo "   cmake --build build - 构建项目"
-            echo "   ./build/main     - 运行"
+            echo "   ./build/main        - 运行"
           case scala
             echo "   make run       - 运行应用"
             echo "   make test      - 运行测试"
+          case haskell
+            echo "   make run       - 运行程序"
+            echo "   make repl      - 进入 GHCi"
           case systemverilog
-            echo "   make sim     - 构建并运行仿真"
-            echo "   make trace   - 生成波形文件"
-            echo "   make lint    - 检查代码"
+            echo "   make sim       - 构建并运行仿真"
+            echo "   make trace     - 生成波形文件"
+            echo "   make lint      - 检查代码"
           case bsv
             echo "   make verilog   - 编译 BSV → Verilog"
             echo "   make verilator - 运行 Verilator 仿真"
-          case chisel
+          case chiselhdl
             echo "   make verilog   - 生成 Verilog"
             echo "   make test      - 运行测试"
+          case clash
+            echo "   cabal build    - 构建 Haskell 代码"
+            echo "   clash --verilog src/Hello.hs - 生成 Verilog"
         end
         
         echo ""
