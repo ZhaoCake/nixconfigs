@@ -4,7 +4,7 @@
   # Codex configuration
   home.file.".codex/config.toml".text = ''
     model_provider = "chatanywhere"
-    model = "gpt-5.2-codex"
+    model = "gpt-5.2-codex-ca"
     model_reasoning_effort = "high"
     disable_response_storage = true
     preferred_auth_method = "apikey"
