@@ -1,0 +1,21 @@
+# CMake
+build/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+
+# VS Code
+.vscode/
+.history/
+
+# Nix/direnv
+.direnv/
+!*.nix
+
+# Binary
+hello_sc
+
+# OS
+.DS_Store
