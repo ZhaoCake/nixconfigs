@@ -111,6 +111,16 @@
         and home-manager switch --flake ~/.nixconfigs#cake $argv
       '';
 
+      # NixOS 专用更新函数
+      nosswitch = ''
+        sudo nixos-rebuild switch --flake ~/.nixconfigs#nixos $argv
+      '';
+      
+      nosupdate = ''
+        nix flake update --flake ~/.nixconfigs
+        and sudo nixos-rebuild switch --flake ~/.nixconfigs#nixos $argv
+      '';
+
       hmnews = ''
         home-manager news --flake ~/.nixconfigs#cake
       '';
