@@ -4,7 +4,8 @@
   programs.fish = {
     enable = true;
     
-    # Fish shell 交互式配置
+
+    # Fish 补全配置（为 nix-init 动态生成补全）
     interactiveShellInit = ''
       # 禁用欢迎消息
       set fish_greeting
@@ -13,6 +14,19 @@
       if status is-login
         fastfetch
       end
+      
+      # 为 nix-init 添加自动补全
+      function __fish_nix_init_completer
+        if test -d "$HOME/.nixconfigs/devShells"
+          for d in "$HOME/.nixconfigs/devShells"/*
+            if test -d "$d"
+              basename "$d"
+            end
+          end
+        end
+      end
+      
+      complete -c nix-init -f -a "(__fish_nix_init_completer)" -d "Project Template"
       
       # 启用 vi 模式（可选）
       # fish_vi_key_bindings
@@ -87,10 +101,28 @@
       hmswitch = ''
         home-manager switch --flake ~/.nixconfigs#cake $argv
       '';
+
+      hmswitchb = ''
+        home-manager switch -b backup --flake ~/.nixconfigs#cake $argv
+      '';
       
       hmupdate = ''
         nix flake update --flake ~/.nixconfigs
         and home-manager switch --flake ~/.nixconfigs#cake $argv
+      '';
+
+      # NixOS 专用更新函数
+      nosswitch = ''
+        sudo nixos-rebuild switch --flake ~/.nixconfigs#nixos $argv
+      '';
+      
+      nosupdate = ''
+        nix flake update --flake ~/.nixconfigs
+        and sudo nixos-rebuild switch --flake ~/.nixconfigs#nixos $argv
+      '';
+
+      hmnews = ''
+        home-manager news --flake ~/.nixconfigs#cake
       '';
       
       # fastfetch 相关函数
@@ -104,33 +136,36 @@
         fastfetch --config ~/.config/fastfetch/config-minimal.jsonc
       '';
       
-      # 创建硬件开发项目（SystemVerilog/BSV/Chisel/Clash）
+      # 创建开发环境项目（支持所有 devShells 模板）
       nix-init = ''
         set -l DEVSHELLS_DIR "$HOME/.nixconfigs/devShells"
         
+        # 获取所有可用的环境类型（即 devShells 子目录名）
+        # 排除以 . 开头的隐藏文件和非目录
+        set -l available_types
+        for d in $DEVSHELLS_DIR/*
+          if test -d $d
+            set -l name (basename $d)
+            if not string match -q '.*' $name
+              set available_types $available_types $name
+            end
+          end
+        end
+        
         # 显示帮助信息
-        function _nix_init_help
+        function _nix_init_help --inherit-variable available_types
           echo "用法: nix-init <环境类型> [项目名]"
           echo ""
           echo "可用的环境类型:"
-          echo "  通用开发:"
-          echo "    cpp                - C++ 项目"
-          echo "    scala              - 纯 Scala 项目"
-          echo "    haskell            - Haskell 项目"
-          echo ""
-          echo "  硬件开发:"
-          echo "    sv, systemverilog  - SystemVerilog + Verilator"
-          echo "    bsv                - Bluespec SystemVerilog"
-          echo "    chisel             - Chisel + Verilator (完整集成环境)"
-          echo "    clash              - Clash (Haskell to HDL)"
+          for type in $available_types
+            echo "    $type"
+          end
           echo ""
           echo "💡 提示: Rust/Python 已安装在主环境，无需模板"
           echo ""
           echo "示例:"
           echo "  nix-init cpp my-app           # 创建 C++ 项目"
-          echo "  nix-init scala my-scala-app   # 创建 Scala 项目"
           echo "  nix-init chisel               # 在当前目录初始化 Chisel"
-          echo "  nix-init sv ~/hardware        # 在指定路径创建 SystemVerilog 项目"
         end
         
         # 检查参数
@@ -142,27 +177,18 @@
         set -l env_type $argv[1]
         set -l project_name $argv[2]
         
-        # 环境名称别名映射
-        switch $env_type
-          case sv
-            set env_type systemverilog
-          case chisel
-            set env_type chiselhdl
+        # 处理别名 (保留常用简写)
+        if test "$env_type" = "sv"
+          set env_type "systemverilog"
         end
         
-        # 验证环境类型
-        if not contains $env_type cpp systemverilog bsv chiselhdl scala haskell clash
+        # 验证环境类型：动态检查目录是否存在
+        set -l template_dir "$DEVSHELLS_DIR/$env_type"
+        if not test -d $template_dir
           echo "❌ 未知的环境类型: '$env_type'"
+          echo "请检查目录 $DEVSHELLS_DIR 下是否存在该模板"
           echo ""
           _nix_init_help
-          return 1
-        end
-        
-        # 确定源模板目录
-        set -l template_dir "$DEVSHELLS_DIR/$env_type"
-        
-        if not test -d $template_dir
-          echo "❌ 模板目录不存在: $template_dir"
           return 1
         end
         
@@ -200,12 +226,24 @@
           end
         end
         
-        # 复制模板文件
+        # 复制模板文件 (动态复制该模板目录下除 README 以外的所有文件，保留隐藏文件)
         echo "📋 复制模板文件..."
-        cp -r $template_dir/* $target_dir/ 2>/dev/null
-        cp $template_dir/.envrc $target_dir/ 2>/dev/null
-        cp $template_dir/.gitignore $target_dir/ 2>/dev/null
-        cp $template_dir/.mill-version $target_dir/ 2>/dev/null
+        
+        # 使用 rsync 或 cp 复制，这里用 cp 通配符可以简单处理 hidden files
+        # 注意：cp -r $template_dir/. $target_dir/ 可能会有些 shell 差异
+        # 为保险起见，显式列出要复制的内容（排除 README，因为它是模板本身的说明）
+        
+        for item in $template_dir/* $template_dir/.*
+          set -l name (basename $item)
+          # 跳过 . 和 ..
+          if test "$name" = "." -o "$name" = ".."
+            continue
+          end
+          # 跳过 README.md (如果不想复制模板本身的 README)
+          # if test "$name" = "README.md"; continue; end
+          
+          cp -r $item $target_dir/ 2>/dev/null
+        end
         
         # 进入项目目录
         cd $target_dir
@@ -228,40 +266,12 @@
         
         echo ""
         echo "✅ 项目初始化完成!"
-        echo ""
-        echo "📍 项目位置: $target_dir"
         echo "🔧 环境类型: $env_type"
         echo ""
-        echo "📝 下一步:"
-        
-        switch $env_type
-          case cpp
-            echo "   cmake -B build      - 配置构建"
-            echo "   cmake --build build - 构建项目"
-            echo "   ./build/main        - 运行"
-          case scala
-            echo "   make run       - 运行应用"
-            echo "   make test      - 运行测试"
-          case haskell
-            echo "   make run       - 运行程序"
-            echo "   make repl      - 进入 GHCi"
-          case systemverilog
-            echo "   make sim       - 构建并运行仿真"
-            echo "   make trace     - 生成波形文件"
-            echo "   make lint      - 检查代码"
-          case bsv
-            echo "   make verilog   - 编译 BSV → Verilog"
-            echo "   make verilator - 运行 Verilator 仿真"
-          case chiselhdl
-            echo "   make verilog   - 生成 Verilog"
-            echo "   make test      - 运行测试"
-          case clash
-            echo "   cabal build    - 构建 Haskell 代码"
-            echo "   clash --verilog src/Hello.hs - 生成 Verilog"
-        end
-        
+        echo "📝 建议后续操作:"
+        echo "   查看该模板的 README.md 或 Makefile 获取更具体的构建指令。"
+        echo "   通常可以运行 'make' 或 'nix develop'。"
         echo ""
-        echo "查看 README.md 获取更多信息"
       '';
     };
   };
