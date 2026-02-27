@@ -130,12 +130,10 @@
   environment.systemPackages = with pkgs; [
     vscode
     flclash
-    clash-nyanpasu
     remmina
     cherry-studio
-
-    # qq
-    # qqmusic
+    qq
+    qqmusic
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
