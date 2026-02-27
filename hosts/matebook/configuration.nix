@@ -74,7 +74,7 @@
   services.printing.enable = true;
 
   # Enable sound with Pulseaudio.
-  hardware.pulseaudio.enable = true;
+  services.pulseaudio.enable = true;
   security.rtkit.enable = true;
   services.pipewire.enable = false;
 
@@ -134,6 +134,7 @@
     cherry-studio
     qq
     qqmusic
+    xwayland
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
