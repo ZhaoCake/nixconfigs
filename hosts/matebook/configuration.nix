@@ -129,11 +129,13 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     vscode
-    clash-verge-rev
+    flclash
+    clash-nyanpasu
     remmina
     cherry-studio
-    qq
-    qqmusic
+
+    # qq
+    # qqmusic
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
