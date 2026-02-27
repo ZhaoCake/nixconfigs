@@ -132,6 +132,8 @@
     clash-verge-rev
     remmina
     cherry-studio
+    qq
+    qqmusic
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
