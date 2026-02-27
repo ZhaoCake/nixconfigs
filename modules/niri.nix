@@ -44,7 +44,7 @@
     settings = {
       main = {
         term = "xterm-256color";
-        font = "Maple Mono NF:size=12";
+        font = "Maple Mono NF:size=10";
         pad = "10x10";
         dpi-aware = "yes";
       };
@@ -201,11 +201,13 @@
     }
 
     // 启动项
-    spawn-at-startup "swww-daemon"
-    spawn-at-startup "swww" "img" "${config.home.homeDirectory}/.config/niri/wallpaper.jpg"
-    
+
     // 启动 Noctalia Shell (作为状态栏/桌面环境)
     spawn-at-startup "noctalia-shell"
+
+    // wallpaper
+    spawn-at-startup "swww-daemon"
+    spawn-at-startup "swww" "img" "${config.home.homeDirectory}/.config/niri/wallpaper.jpg"
     
     // 启动通知守护进程 (如果系统有 mako 或 dunst，这里暂不需要，niri 推荐 mako)
     // spawn-at-startup "mako"
