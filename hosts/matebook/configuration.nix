@@ -122,6 +122,17 @@
   # Install firefox.
   programs.firefox.enable = true;
 
+  # Install fonts
+  fonts.packages = with pkgs; [
+    maple-mono.CN
+    maple-mono.NF
+    noto-fonts
+    noto-fonts-cjk-sans
+    noto-fonts-cjk-serif
+    nerd-fonts.jetbrains-mono
+    nerd-fonts.fira-code
+  ];
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
@@ -130,6 +141,7 @@
   environment.systemPackages = with pkgs; [
     vscode
     clash-verge-rev
+    remmina
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
   ];
