@@ -48,6 +48,17 @@
     LC_TIME = "zh_CN.UTF-8";
   };
 
+  # Configure Fcitx5 Input Method
+  i18n.inputMethod = {
+    enable = true;
+    type = "fcitx5";
+    fcitx5.addons = with pkgs; [
+      fcitx5-gtk
+      qt6Packages.fcitx5-chinese-addons
+      fcitx5-nord
+    ];
+  };
+
   # Enable the X11 windowing system.
   # services.xserver.enable = true;
 
@@ -135,6 +146,7 @@
     qq
     qqmusic
     xwayland
+    xwayland-satellite
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
