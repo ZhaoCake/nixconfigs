@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Check flake structure
+        run: nix flake check
+
+      - name: Evaluate home-manager config (cake)
+        run: nix eval .#homeConfigurations.cake.config.home.username
+
+      - name: Evaluate NixOS config (nixos-vm)
+        run: nix eval .#nixosConfigurations.nixos.config.system.nixos.version
+
+      - name: Evaluate NixOS config (matebook)
+        run: nix eval .#nixosConfigurations.matebook.config.system.nixos.version

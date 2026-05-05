@@ -1,6 +1,6 @@
 # Nix 开发环境配置
 
-![CI Status](https://github.com/zhaocake/nixconfigs/workflows/CI%20-%20Nix%20Configuration%20Check/badge.svg)
+![CI Status](https://github.com/zhaocake/nixconfigs/workflows/CI/badge.svg)
 
 这是一个优雅的、模块化的 Nix + Home Manager 配置，用于管理用户级别的开发环境。
 
