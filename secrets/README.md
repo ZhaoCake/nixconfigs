@@ -27,6 +27,7 @@
 | `siliconflow_api_key.age` | SiliconFlow API Key |
 | `deepseek_api_key.age` | DeepSeek API Key |
 | `ark_api_key.age` | Ark (Volcengine) API Key |
+| `tavily_api_key.age` | Tavily Search API Key |
 
 ## 日常操作
 
