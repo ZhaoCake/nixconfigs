@@ -26,5 +26,9 @@
       file = "${self}/secrets/ark_api_key.age";
       path = "${config.home.homeDirectory}/.config/ai-secrets/ark_api_key";
     };
+    tavily_api_key = {
+      file = "${self}/secrets/tavily_api_key.age";
+      path = "${config.home.homeDirectory}/.config/ai-secrets/tavily_api_key";
+    };
   };
 }

@@ -83,6 +83,28 @@
           }
         }
       },
+      "mcp": {
+        "tavily_mcp": {
+          "type": "local",
+          "command": ["npx", "-y", "tavily-mcp"],
+          "enabled": true,
+          "environment": {
+            "TAVILY_API_KEY": "{file:~/.config/ai-secrets/tavily_api_key}",
+            "DEFAULT_PARAMETERS": "{\"max_results\": 10, \"search_depth\": \"advanced\"}"
+          }
+        },
+        "scholar_mcp": {
+          "type": "local",
+          "command": ["npx", "-y", "scholar-mcp", "--transport=stdio"],
+          "enabled": true,
+          "environment": {
+            "SCHOLAR_MCP_TRANSPORT": "stdio",
+            "SCHOLAR_REQUEST_DELAY_MS": "350",
+            "RESEARCH_ALLOW_REMOTE_PDFS": "true",
+            "RESEARCH_ALLOW_LOCAL_PDFS": "true"
+          }
+        }
+      },
       "model": "deepseek/deepseek-v4-pro",
       "small_model": "deepseek/deepseek-v4-flash"
     }
