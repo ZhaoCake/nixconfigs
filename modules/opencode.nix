@@ -16,7 +16,7 @@
           "npm": "@ai-sdk/anthropic",
           "name": "NewCLI Anthropic",
           "options": {
-            "baseURL": "https://code.newcli.com/claude/super",
+            "baseURL": "https://code.newcli.com/claude/ultra",
             "apiKey": "{file:~/.config/ai-secrets/anthropic_api_key}"
           },
           "models": {
@@ -92,7 +92,7 @@
     {
       "agents": {
         "sisyphus": {
-          "model": "newcli-anthropic/claude-opus-4-6",
+          "model": "deepseek/deepseek-v4-pro",
           "fallback_models": [
             "newcli-anthropic/claude-sonnet-4-6",
             "deepseek/deepseek-v4-pro",
@@ -101,21 +101,21 @@
           ]
         },
         "metis": {
-          "model": "newcli-anthropic/claude-opus-4-6",
+          "model": "deepseek/deepseek-v4-pro",
           "fallback_models": [
             "newcli-anthropic/claude-sonnet-4-6",
             "deepseek/deepseek-v4-pro"
           ]
         },
         "prometheus": {
-          "model": "newcli-anthropic/claude-opus-4-6",
+          "model": "deepseek/deepseek-v4-pro",
           "fallback_models": [
             "newcli-anthropic/claude-sonnet-4-6",
             "deepseek/deepseek-v4-pro"
           ]
         },
         "atlas": {
-          "model": "newcli-anthropic/claude-opus-4-6",
+          "model": "deepseek/deepseek-v4-pro",
           "fallback_models": [
             "newcli-anthropic/claude-sonnet-4-6",
             "deepseek/deepseek-v4-pro",
