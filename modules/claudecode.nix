@@ -5,13 +5,19 @@
     claude-code
   ];
 
-  # Claude Code defaults: use Anthropic-compatible gateway URL.
+  # Claude Code defaults: use DeepSeek Anthropic-compatible API.
   home.file.".claude/settings.json".text = ''
     {
       "$schema": "https://json.schemastore.org/claude-code-settings.json",
-      "model": "claude-sonnet-4-6",
+      "model": "deepseek-v4-pro",
       "env": {
-        "ANTHROPIC_BASE_URL": "https://code.newcli.com/claude/super",
+        "ANTHROPIC_BASE_URL": "https://api.deepseek.com/anthropic",
+        "ANTHROPIC_MODEL": "deepseek-v4-pro",
+        "ANTHROPIC_DEFAULT_OPUS_MODEL": "deepseek-v4-pro",
+        "ANTHROPIC_DEFAULT_SONNET_MODEL": "deepseek-v4-pro",
+        "ANTHROPIC_DEFAULT_HAIKU_MODEL": "deepseek-v4-flash",
+        "CLAUDE_CODE_SUBAGENT_MODEL": "deepseek-v4-flash",
+        "CLAUDE_CODE_EFFORT_LEVEL": "max",
         "CLAUDE_CODE_ATTRIBUTION_HEADER": "0",
         "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
         "CLAUDE_CODE_DISABLE_TERMINAL_TITLE": "1"
