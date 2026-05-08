@@ -2,7 +2,7 @@
 
 {
   imports = [
-    ./claudecode.nix
+    # ./claudecode.nix
     # ./codex.nix
     ./opencode.nix
   ];

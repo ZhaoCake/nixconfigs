@@ -105,6 +105,21 @@
     options = "--delete-older-than 30d";
   };
 
+  # npm 全局包目录（避开 /nix/store 只读限制）
+  home.sessionVariables = {
+    NPM_CONFIG_PREFIX = "${config.home.homeDirectory}/.npm-global";
+  };
+
+  home.sessionPath = [
+    "${config.home.homeDirectory}/.npm-global/bin"
+  ];
+
+  home.activation = {
+    createNpmGlobalDir = config.lib.dag.entryAfter [ "writeBoundary" ] ''
+      $DRY_RUN_CMD mkdir -p "${config.home.homeDirectory}/.npm-global"
+    '';
+  };
+
   # 环境变量由 Nixvim 的 defaultEditor 选项自动设置
 
   # 统一 programs 配置，避免 repeated assignments 警告
