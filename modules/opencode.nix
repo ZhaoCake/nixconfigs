@@ -2,9 +2,9 @@
 
 {
   home = {
-    packages = with pkgs; [
-      opencode
-    ];
+    # packages = with pkgs; [
+    #   opencode
+    # ];
 
     # OpenCode default provider/model configuration with oh-my-openagent plugin.
     file.".config/opencode/opencode.jsonc".text = ''
