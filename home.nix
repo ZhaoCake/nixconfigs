@@ -105,6 +105,21 @@
     options = "--delete-older-than 30d";
   };
 
+  # npm 全局包目录（避开 /nix/store 只读限制）
+  home.sessionVariables = {
+    NPM_CONFIG_PREFIX = "${config.home.homeDirectory}/.npm-global";
+  };
+
+  home.sessionPath = [
+    "${config.home.homeDirectory}/.npm-global/bin"
+  ];
+
+  home.activation = {
+    createNpmGlobalDir = config.lib.dag.entryAfter [ "writeBoundary" ] ''
+      $DRY_RUN_CMD mkdir -p "${config.home.homeDirectory}/.npm-global"
+    '';
+  };
+
   # 环境变量由 Nixvim 的 defaultEditor 选项自动设置
 
   # 统一 programs 配置，避免 repeated assignments 警告
@@ -167,40 +182,22 @@
     # SSH 配置
     ssh = {
       enable = true;
-      enableDefaultConfig = false; # 禁用默认配置，手动指定
-
-      # SSH 配置
-      matchBlocks = {
-        # 全局默认配置（相当于 Host *）
+      enableDefaultConfig = false;
+      settings = {
         "*" = {
-          # 保持连接活跃
-          serverAliveInterval = 60;
-          serverAliveCountMax = 3;
-
-          # 启用连接复用
-          controlMaster = "auto";
-          controlPath = "~/.ssh/control-%r@%h:%p";
-          controlPersist = "10m";
-
-          # 其他常用默认配置
-          forwardAgent = false;
-          compression = true;
+          ServerAliveInterval = 60;
+          ServerAliveCountMax = 3;
+          ControlMaster = "auto";
+          ControlPath = "~/.ssh/control-%r@%h:%p";
+          ControlPersist = "10m";
+          ForwardAgent = false;
+          Compression = true;
         };
-
-        # GitHub 配置
         "github.com" = {
-          hostname = "github.com";
-          user = "git";
-          identityFile = "~/.ssh/id_ed25519";
+          HostName = "github.com";
+          User = "git";
+          IdentityFile = "~/.ssh/id_ed25519";
         };
-
-        # 示例：服务器配置
-        # "myserver" = {
-        #   hostname = "192.168.1.100";
-        #   user = "cake";
-        #   port = 22;
-        #   identityFile = "~/.ssh/id_rsa";
-        # };
       };
     };
   };
